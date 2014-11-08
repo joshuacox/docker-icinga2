@@ -54,7 +54,6 @@ EOF
 
 </databases>
 EOF
-    echo >&2 "TODO: Create Icinga WEB config"
 fi
 
 if [ "${1,,}" == "setup" ] ; then
