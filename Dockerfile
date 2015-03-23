@@ -1,5 +1,5 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
-FROM debian:wheezy
+FROM debian:jessie
 
 MAINTAINER Joachim Breitsprecher
 
