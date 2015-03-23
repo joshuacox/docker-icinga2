@@ -1,7 +1,7 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
 FROM debian:wheezy
 
-MAINTAINER Joachim Breitsprecher
+MAINTAINER Joshua Cox
 
 # Environment variables
 ENV DEBIAN_FRONTEND noninteractive
