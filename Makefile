@@ -11,6 +11,8 @@ runold: rundocker beep
 
 run: mysql tryout beep
 
+runupstream: mysql upstream beep
+
 rundocker:
 	@docker run --name=dockericinga2 \
 	-v ~/.ssh:/tmp/.ssh \
@@ -30,14 +32,28 @@ beep:
 setup:
 	docker run -it --rm --link mysql:mysql -t dockericinga2 setup
 
+pull:
+	docker pull joshuacox/docker-icinga2
+
+upstream:
+	docker run --name=joshuacoxdockericinga2 \
+	-P \
+	--cidfile="cid" \
+	-d \
+	--link mysql:mysql \
+	-e "ICINGA_DB_PASSWORD=REPLACEMEDB" \
+	-e "ICINGAWEB_DB_PASSWORD=REPLACEMEWEBDB" \
+	-v $(shell which docker):/bin/docker \
+	-t joshuacox/docker-icinga2
+
 tryout:
 	docker run --name=dockericinga2 \
 	-P \
 	--cidfile="cid" \
 	-d \
 	--link mysql:mysql \
-	-e "ICINGAWEB_DB_PASSWORD=siesaechuofaepohkitaideechizauva" \
-	-e "ICINGA_DB_PASSWORD=ahxairaweivakexeizefedootojuerak" \
+	-e "ICINGA_DB_PASSWORD=REPLACEMEDB" \
+	-e "ICINGAWEB_DB_PASSWORD=REPLACEMEWEBDB" \
 	-v $(shell which docker):/bin/docker \
 	-t dockericinga2
 
