@@ -44,6 +44,7 @@ RUN chmod u+x /entrypoint.sh
 
 VOLUME  ["/etc/icinga2"]
 
+EXPOSE 80
 # Initialize and run Supervisor
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/supervisord"]
