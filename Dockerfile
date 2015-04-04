@@ -3,7 +3,7 @@ FROM debian:wheezy
 MAINTAINER Joshua Cox josh at webhosting coop
 
 # Environment variables
-ENV DOCKER_ICINGA2_UPDATED_20150403
+ENV DOCKER_ICINGA2_UPDATED 20150403
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update package lists.
