@@ -1,9 +1,9 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
 FROM debian:jessie
-
-MAINTAINER Joachim Breitsprecher
+MAINTAINER josh at webhosting coop
 
 # Environment variables
+ENV DOCKER_ICINGA2_UPDATED 20150403
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update package lists.
@@ -45,7 +45,6 @@ RUN chmod u+x /entrypoint.sh
 VOLUME  ["/etc/icinga2"]
 
 EXPOSE 80
-
 # Initialize and run Supervisor
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/supervisord"]
