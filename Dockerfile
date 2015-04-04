@@ -1,6 +1,6 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
 FROM debian:wheezy
-MAINTAINER Joshua Cox josh at webhosting coop
+MAINTAINER josh at webhosting coop
 
 # Environment variables
 ENV DOCKER_ICINGA2_UPDATED 20150403
