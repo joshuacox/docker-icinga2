@@ -37,7 +37,7 @@ RUN apt-get -qqy install --no-install-recommends icinga2 icinga2-ido-mysql icing
 RUN apt-get clean
 
 # Enable IDO for MySQL. This is needed by icinga-web.
-RUN icinga2 enable feature ido-mysql
+RUN icinga2 feature enable ido-mysql
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
