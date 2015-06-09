@@ -22,7 +22,7 @@ docker run -it --rm --link mysql:mysql -t joshuacox/docker-icinga2 setup
 Take a note of the displayed MySQL passwords, then start the Icinga2 container and pass the passwords as environment variables.
 
 ```
-docker run -d --link mysql:mysql -e "ICINGAWEB_DB_PASSWORD=<ICINGAWEB_DB_PASSWORD>" -e "ICINGA_DB_PASSWORD=<ICINGA_DB_PASSWORD>" jeyk/icinga2
+docker run -d --link mysql:mysql -e "ICINGAWEB_DB_PASSWORD=<ICINGAWEB_DB_PASSWORD>" -e "ICINGA_DB_PASSWORD=<ICINGA_DB_PASSWORD>" joshuacox/docker-icinga2
 ```
 
 # Environment Variables
