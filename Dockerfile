@@ -1,9 +1,9 @@
-# Dockerfile for icinga2, icinga-web and icinga2-classicui
+# Dockerfile for icinga, icinga-web and icinga-classicui
 FROM debian:wheezy
 MAINTAINER josh at webhosting coop
 
 # Environment variables
-ENV DOCKER_ICINGA2_UPDATED 20150523
+ENV DOCKER_ICINGA_UPDATED 20150523
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update package lists.
@@ -12,7 +12,7 @@ RUN apt-get -qq update
 # Install basic packages.
 RUN apt-get -qqy install --no-install-recommends sudo procps ca-certificates wget pwgen
 
-# Install supervisord because we need to run Apache and Icinga2 at the same time.
+# Install supervisord because we need to run Apache and icinga at the same time.
 RUN apt-get -qqy install --no-install-recommends supervisor
 
 # Add supervisord configuration
@@ -30,19 +30,19 @@ RUN apt-get -qq update
 # of icinga-web fails. To work around this, install dependencies beforehand.
 RUN apt-get -qqy --no-install-recommends install apache2 mysql-client
 
-# Install icinga2 and icinga-classicui.
-RUN apt-get -qqy install --no-install-recommends icinga2 icinga2-ido-mysql icinga-web icinga2-classicui nagios-plugins
+# Install icinga and icinga-classicui.
+RUN apt-get -qqy install --no-install-recommends icinga icinga-ido-mysql icinga-web icinga-classicui nagios-plugins
 
 # Clean up some.
 RUN apt-get clean
 
 # Enable IDO for MySQL. This is needed by icinga-web.
-RUN icinga2 feature enable ido-mysql
+RUN icinga feature enable ido-mysql
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
 
-VOLUME  ["/etc/icinga2"]
+VOLUME  ["/etc/icinga"]
 
 EXPOSE 80
 # Initialize and run Supervisor
