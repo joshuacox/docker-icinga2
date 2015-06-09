@@ -109,8 +109,8 @@ if [ "${1,,}" == "setup" ] ; then
 fi
 
 gpasswd -a www-data nagios
-mkdir -p /var/run/icinga2/cmd
-chown -R nagios:nagios /var/run/icinga2
-#chown -R nagios:www-data /var/run/icinga2/cmd
-#chmod g+rwx /var/run/icinga2/cmd
+mkdir -p /var/run/icinga/cmd
+chown -R nagios:nagios /var/run/icinga
+#chown -R nagios:www-data /var/run/icinga/cmd
+#chmod g+rwx /var/run/icinga/cmd
 exec "$@"
