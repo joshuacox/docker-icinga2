@@ -84,7 +84,7 @@ if [ "${1,,}" == "setup" ] ; then
     echo "GRANT ALL ON $ICINGA_DATABASE.* TO '$ICINGAWEB_DB_USER'@'%' IDENTIFIED BY '$ICINGAWEB_DB_PASSWORD';" | mysql -uroot "-p$MYSQL_ENV_MYSQL_ROOT_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" mysql
 
     echo "Importing database schema into $ICINGA_DATABASE..."
-    mysql "-u$ICINGA_DB_USER" "-p$ICINGA_DB_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" "$ICINGA_DATABASE" < /usr/share/dbconfig-common/data/icinga-idoutils/install
+    mysql "-u$ICINGA_DB_USER" "-p$ICINGA_DB_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" "$ICINGA_DATABASE" < /usr/share/dbconfig-common/data/icinga-idoutils/install/mysql
 
     echo "Importing database schema into $ICINGAWEB_DATABASE..."
     mysql "-u$ICINGAWEB_DB_USER" "-p$ICINGAWEB_DB_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" "$ICINGAWEB_DATABASE" < /usr/share/dbconfig-common/data/icinga-web/install/mysql
