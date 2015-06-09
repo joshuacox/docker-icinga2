@@ -20,20 +20,20 @@ rundocker:
 	-v ~/.gitconfig:/root/.gitconfig \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
-	-t dockericinga2
+	-t joshuacox/docker-icinga2:icinga1
 
 builddocker:
-	/usr/bin/time -v docker build -t dockericinga2 .
+	/usr/bin/time -v docker build -t joshuacox/docker-icinga2:icinga1 .
 
 beep:
 	@echo "beep"
 	@aplay /usr/share/sounds/alsa/Front_Center.wav
 
 setup:
-	docker run -it --rm --link mysql:mysql -t dockericinga2 setup
+	docker run -it --rm --link mysql:mysql -t  joshuacox/docker-icinga2:icinga1 setup
 
 pull:
-	docker pull joshuacox/docker-icinga2
+	docker pull joshuacox/docker-icinga2:icinga1
 
 upstream:
 	docker run --name=joshuacoxdockericinga2 \
@@ -44,7 +44,7 @@ upstream:
 	-e "ICINGA_DB_PASSWORD=REPLACEMEDB" \
 	-e "ICINGAWEB_DB_PASSWORD=REPLACEMEWEBDB" \
 	-v $(shell which docker):/bin/docker \
-	-t joshuacox/docker-icinga2
+	-t joshuacox/docker-icinga2:icinga1
 
 tryout:
 	docker run --name=dockericinga2 \
@@ -55,7 +55,7 @@ tryout:
 	-e "ICINGA_DB_PASSWORD=REPLACEMEDB" \
 	-e "ICINGAWEB_DB_PASSWORD=REPLACEMEWEBDB" \
 	-v $(shell which docker):/bin/docker \
-	-t dockericinga2
+	-t joshuacox/docker-icinga2:icinga1
 
 killmysql:
 	@docker kill `cat mysql`

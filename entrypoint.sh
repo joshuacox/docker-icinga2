@@ -11,7 +11,7 @@ ICINGA_DATABASE=${ICINGA_DATABASE:=icinga}
 ICINGA_DB_USER=${ICINGA_DB_USER:=icinga}
 if [ -z "$ICINGA_DB_PASSWORD" ] ; then 
     ICINGA_DB_PASSWORD=`pwgen 32 1`
-else
+#else
     # Create IDO-MySQL configuration if connection info was passed as environment variables
     #cat >/etc/icinga/features-available/ido-mysql.conf <<-EOF
 #library "db_ido_mysql"
@@ -23,7 +23,7 @@ else
   #database = "$ICINGA_DATABASE"
 #}
 #EOF
-fi
+#fi
 
 ICINGAWEB_DATABASE=${ICINGAWEB_DATABASE:=icinga_web}
 ICINGAWEB_DB_USER=${ICINGAWEB_DB_USER:=icinga_web}
