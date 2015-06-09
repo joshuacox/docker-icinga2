@@ -31,13 +31,13 @@ RUN apt-get -qq update
 RUN apt-get -qqy --no-install-recommends install apache2 mysql-client
 
 # Install icinga and icinga-classicui.
-RUN apt-get -qqy install --no-install-recommends icinga icinga-ido-mysql icinga-web icinga-classicui nagios-plugins
+RUN apt-get -qqy install --no-install-recommends icinga icinga-web nagios-plugins icinga-web-config-icinga icinga-idoutils
 
 # Clean up some.
 RUN apt-get clean
 
 # Enable IDO for MySQL. This is needed by icinga-web.
-RUN icinga feature enable ido-mysql
+# RUN icinga feature enable ido-mysql
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh

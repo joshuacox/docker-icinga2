@@ -7,13 +7,13 @@ if [ -z "$MYSQL_PORT_3306_TCP" ]; then
     exit 1
 fi
 
-ICINGA_DATABASE=${ICINGA_DATABASE:=icinga2}
-ICINGA_DB_USER=${ICINGA_DB_USER:=icinga2}
+ICINGA_DATABASE=${ICINGA_DATABASE:=icinga}
+ICINGA_DB_USER=${ICINGA_DB_USER:=icinga}
 if [ -z "$ICINGA_DB_PASSWORD" ] ; then 
     ICINGA_DB_PASSWORD=`pwgen 32 1`
 else
     # Create IDO-MySQL configuration if connection info was passed as environment variables
-    cat >/etc/icinga2/features-available/ido-mysql.conf <<-EOF
+    cat >/etc/icinga/features-available/ido-mysql.conf <<-EOF
 library "db_ido_mysql"
 
 object IdoMysqlConnection "ido-mysql" {
@@ -84,7 +84,8 @@ if [ "${1,,}" == "setup" ] ; then
     echo "GRANT ALL ON $ICINGA_DATABASE.* TO '$ICINGAWEB_DB_USER'@'%' IDENTIFIED BY '$ICINGAWEB_DB_PASSWORD';" | mysql -uroot "-p$MYSQL_ENV_MYSQL_ROOT_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" mysql
 
     echo "Importing database schema into $ICINGA_DATABASE..."
-    mysql "-u$ICINGA_DB_USER" "-p$ICINGA_DB_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" "$ICINGA_DATABASE" < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+    mysql "-u$ICINGA_DB_USER" "-p$ICINGA_DB_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" "$ICINGA_DATABASE" < /usr/share/dbconfig-common/data/icinga-idoutils/install
+
     echo "Importing database schema into $ICINGAWEB_DATABASE..."
     mysql "-u$ICINGAWEB_DB_USER" "-p$ICINGAWEB_DB_PASSWORD" "-h$MYSQL_PORT_3306_TCP_ADDR" "-P$MYSQL_PORT_3306_TCP_PORT" "$ICINGAWEB_DATABASE" < /usr/share/dbconfig-common/data/icinga-web/install/mysql
 
