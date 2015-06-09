@@ -16,7 +16,7 @@ docker run --name mysql -e MYSQL_ROOT_PASSWORD=<SECURE_PASSWORD> -d mysql
 Run first-time initialization.
 
 ```
-docker run -it --rm --link mysql:mysql -t jeyk/icinga2 setup
+docker run -it --rm --link mysql:mysql -t joshuacox/docker-icinga2 setup
 ```
 
 Take a note of the displayed MySQL passwords, then start the Icinga2 container and pass the passwords as environment variables.
