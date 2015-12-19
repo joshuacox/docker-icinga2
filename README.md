@@ -1,51 +1,49 @@
 # About This Image
 
-1. Based on debian:wheezy
-1. Does not contain a database. You need to link it with a MySQL container
-1. No SSH. If you need to execute commands in the context of the container, you can use [nsenter](https://github.com/jpetazzo/nsenter).
-1. If the linked MySQL container supplies the database's root password, the database can automatically be created and initialized.
+1. Based on debian:jessie
+1. Does not contain a database. You need to link it with a MySQL container (this is done for you by the Makefile)
+1. No SSH. If you need to execute commands in the context of the container, you can use [roustabout’s EnterDocker command](http://joshuacox.github.io/roustabout/).
+1. You will be prompted for the database's root password, the database will then automatically be created and initialized
+1. After you run the `make grab` command you can `make rmall` and start in `make prod` mode which will be persistent (so long as you move the datadir out of `/tmp!`)
 
 # How To Use This Image
 
-Create a MySQL container, if you do not already have one.
+#### Usage
+
+should be easy first pull the temporary recipe up
 
 ```
-docker run --name mysql -e MYSQL_ROOT_PASSWORD=<SECURE_PASSWORD> -d mysql
+make temp
 ```
 
-Run first-time initialization.
+Let it finish populating the databases, (you can watch by using `make logs` ctrl-c to exit viewing the logs, despite what the warning says you will actually not kill the container
+[because your are killing the `tail -f` of the log watching process not the process itself in this case])
+and `killall mysql`
+
 
 ```
-docker run -it --rm --link mysql:mysql -t joshuacox/docker-icinga2 setup
+make enter      # we have ‘entered’ the container
+killall mysql   # note this is ran inside of the container
+exit            # back in the host environment now
 ```
 
-Take a note of the displayed MySQL passwords, then start the Icinga2 container and pass the passwords as environment variables.
+
+then grab all the persistent volumes
 
 ```
-docker run -d --link mysql:mysql -e "ICINGAWEB_DB_PASSWORD=<ICINGAWEB_DB_PASSWORD>" -e "ICINGA_DB_PASSWORD=<ICINGA_DB_PASSWORD>" joshuacox/docker-icinga2
+make grab
 ```
 
-# Environment Variables
-
-When running the container, you need to pass at least the passwords to the databases as environment variables.
-
-```
-ICINGA_DB_PASSWORD
-ICINGAWEB_DB_PASSWORD
-```
-
-If you are not happy with the defaults, you can use these variables:
+then run in `prod` mode, take this ‘prod’ with a grain of salt, I’ll leave it to you to understand all security implications of the 
+MYSQL_ROOT_PASS file hanging out after these Makefiles have ran (i.e. on all docker machines you should implicitly trust all users with the ‘docker’ group as they effectively have root on the machine)
 
 ```
-ICINGA_DB_USER      (default: icinga2)
-ICINGA_DATABASE     (default: icinga2)
-ICINGAWEB_DB_USER   (default: icinga_web)
-ICINGAWEB_DATABASE  (default: icinga_web)
+make prod
 ```
 
 # Volumes
 
-This container exposes one volume that contains all configurations files for icinga, icinga-web and icinga-classicui.
+This container exposes one volume that contains all configurations files for icinga, icinga-web and icinga-classicui. They will all be captured with the `make grab` command
 
 ```
 /etc/icinga2
