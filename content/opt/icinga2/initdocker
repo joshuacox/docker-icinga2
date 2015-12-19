@@ -48,13 +48,16 @@ if [ ! -f "${initfile}" ]; then
         #echo_log "Starting DB schema import. This might take a while (20sec+)."
         #mysql_install_db --user=mysql --ldata=/var/lib/mysql 2>&1 >/dev/null
         #/usr/bin/mysqld_safe 2>&1 >/dev/null &
-        #sleep 10s
+        echo_log "pause for mysql to start"
+        sleep 10s
         echo_log "populating mysql db"
-        mysql -hmysql -uroot -p$MYSQL_ENV_MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS icinga ; GRANT ALL ON icinga.* TO icinga@localhost IDENTIFIED BY $MYSQL_ENV_MYSQL_ROOT_PASSWORD;"
-        mysql -hmysql -uicinga -picinga icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql
-        mysql -hmysql -uroot -e "CREATE DATABASE IF NOT EXISTS icingaweb2 ; GRANT ALL ON icingaweb2.* TO icingaweb2@localhost IDENTIFIED BY $MYSQL_ENV_MYSQL_ROOT_PASSWORD;"
-        mysql -hmysql -uicingaweb2 -picingaweb2 icingaweb2 < /usr/share/doc/icingaweb2/schema/mysql.schema.sql
-        mysql -hmysql -uicingaweb2 -picingaweb2 icingaweb2 -e "INSERT INTO icingaweb_user (name, active, password_hash) VALUES ('icingaadmin', 1, '\$1\$iQSrnmO9\$T3NVTu0zBkfuim4lWNRmH.');"
+        mysql -hmysql -uroot -p$MYSQL_ENV_MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS icinga ; GRANT ALL ON icinga.* TO icinga@'%' IDENTIFIED BY '$MYSQL_ENV_MYSQL_ROOT_PASSWORD';"
+        mysql -hmysql -uicinga -p$MYSQL_ENV_MYSQL_ROOT_PASSWORD icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+        mysql -hmysql -uroot -p$MYSQL_ENV_MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS icingaweb2 ; GRANT ALL ON icingaweb2.* TO icingaweb2@'%' IDENTIFIED BY '$MYSQL_ENV_MYSQL_ROOT_PASSWORD';"
+        echo_log "populating mysql db pw info to icingaweb2"
+        mysql -hmysql -uicingaweb2 -p$MYSQL_ENV_MYSQL_ROOT_PASSWORD icingaweb2 < /usr/share/icingaweb2/etc/schema/mysql.schema.sql
+        echo_log "done pup db"
+        mysql -hmysql -uicingaweb2 -p$MYSQL_ENV_MYSQL_ROOT_PASSWORD icingaweb2 -e "INSERT INTO icingaweb_user (name, active, password_hash) VALUES ('icingaadmin', 1, '\$1\$iQSrnmO9\$T3NVTu0zBkfuim4lWNRmH.');"
         #killall mysqld
         #sleep 1s
         echo_log "populating mysql db pw info to icingaweb2"
