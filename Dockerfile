@@ -1,5 +1,5 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
-FROM debian:jessie
+FROM local-jessie
 MAINTAINER josh at webhosting coop
 
 # Environment variables
