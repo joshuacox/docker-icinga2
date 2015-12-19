@@ -4,6 +4,7 @@ mysqlcid
 mysqltemp
 jessie
 datadir
+DATADIR
 APACHE_DATADIR
 MYSQL_DATADIR
 MYSQL_PASS
