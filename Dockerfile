@@ -24,9 +24,8 @@ echo "deb http://debmon.org/debmon debmon-jessie main" >> /etc/apt/sources.list 
 echo "deb http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
 echo "deb-src http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
 apt-get -qq update ; \
-apt-get -qqy --no-install-recommends install apache2 mysql-client ; \
-apt-get -qqy install --no-install-recommends icinga2 icinga2-ido-mysql icinga-web icinga2-classicui nagios-plugins ; \
-apt-get -qqy install apache2 mysql-client icinga2 icinga2-ido-mysql icinga-web icinga2-classicui nagios-plugins ; \
+apt-get -qqy --no-install-recommends install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 ; \
+apt-get -qqy install --no-install-recommends fail2ban icinga2 icinga2-ido-mysql icinga-web icinga2-classicui nagios-plugins ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
 
@@ -51,6 +50,8 @@ RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/ss
  ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
  echo 'root:icingar0xx' | chpasswd; \
  useradd -g wheel appuser; \
+ mkdir /home/appuser; \
+ chown -R appuser. /home/appuser; \
  echo 'appuser:appuser' | chpasswd; \
  sed -i -e 's/^\(%wheel\s\+.\+\)/#\1/gi' /etc/sudoers; \
  echo -e '\n%wheel ALL=(ALL) ALL' >> /etc/sudoers; \
@@ -98,7 +99,9 @@ RUN chmod u+x /entrypoint.sh
 
 
 # configure PHP timezone
-RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php.ini
+# RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php.ini
+RUN sed -i 's/;date.timezone =/date.timezone = CST/g' /etc/php5/apache2/php.ini
+RUN sed -i 's/;date.timezone =/date.timezone = CST/g' /etc/php5/cli/php.ini
 
 # ports (icinga2 api & cluster (5665), mysql (3306))
 EXPOSE 22 80 443 5665 3306
@@ -107,7 +110,8 @@ EXPOSE 22 80 443 5665 3306
 VOLUME ["/etc/icinga2", "/etc/icingaweb2", "/var/lib/icinga2", "/usr/share/icingaweb2", "/var/lib/mysql"]
 
 # change this to entrypoint preventing bash login
-CMD ["/opt/icinga2/initdocker"]
+CMD ["/bin/bash"]
+#CMD ["/opt/icinga2/initdocker"]
 #ENTRYPOINT ["/opt/icinga2/initdocker"]
 # Initialize and run Supervisor
 #ENTRYPOINT ["/entrypoint.sh"]

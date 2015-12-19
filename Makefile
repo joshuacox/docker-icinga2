@@ -20,7 +20,7 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: build rundocker
+run: rm build rundocker
 
 # run a  container that requires mysql temporarily
 temp: MYSQL_PASS rm build mysqltemp runmysqltemp
@@ -74,7 +74,8 @@ runmysqltemp:
 	--link `cat NAME`-mysqltemp:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
-	-t $(TAG)
+	-t $(TAG) \
+	/opt/icinga2/initdocker
 
 runprod:
 	$(eval APACHE_DATADIR := $(shell cat APACHE_DATADIR))
