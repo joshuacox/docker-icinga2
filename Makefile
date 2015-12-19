@@ -27,7 +27,7 @@ temp: MYSQL_PASS rm build mysqltemp runmysqltemp
 
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
-prod: APACHE_DATADIR MYSQL_DATADIR MYSQL_PASS rm build mysqlcid runprod
+prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
 
 ## useful hints
 ## specifiy ports
@@ -74,14 +74,10 @@ runmysqltemp:
 	--link `cat NAME`-mysqltemp:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
-	-t $(TAG) \
-	/opt/icinga2/initdocker
+	-t $(TAG)
 
 runprod:
-	$(eval APACHE_DATADIR := $(shell cat APACHE_DATADIR))
-	ifeq ($(APACHE_DATADIR),'')
-	$(error  "try make runmysqltemp and then make grab once you have initialized your installation")
-	endif
+	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
@@ -90,10 +86,16 @@ runprod:
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-d \
-	-P \
+	-p 4080:80 \
+	-p 4443:443 \
+	-p 4665:5665 \
 	--link `cat NAME`-mysql:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
-	-v $(APACHE_DATADIR):/var/www/html \
+	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
+	-v $(DATADIR)/etc/icinga:/etc/icinga \
+	-v $(DATADIR)/etc/icinga2:/etc/icinga2 \
+	-v $(DATADIR)/etc/icinga2-classicui:/etc/icinga2-classicui \
+	-v $(DATADIR)/etc/icingaweb2:/etc/icingaweb2 \
 	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
 
@@ -131,16 +133,13 @@ TAG:
 # use these to generate a mysql container that may or may not be persistent
 
 mysqlcid:
-	$(eval MYSQL_DATADIR := $(shell cat MYSQL_DATADIR))
-	ifeq ($(MYSQL_DATADIR),'')
-	$(error  "try make runmysqltemp and then make grab once you have initialized your installation")
-	endif
+	$(eval DATADIR := $(shell cat DATADIR))
 	docker run \
 	--cidfile="mysqlcid" \
 	--name `cat NAME`-mysql \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
-	-v $(MYSQL_DATADIR):/var/lib/mysql \
+	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:5.5
 
 rmmysql: mysqlcid-rmkill
@@ -168,28 +167,30 @@ mysqltemp-rmkill:
 
 rmall: rm rmmysqltemp rmmysql
 
-grab: grabapachedir grabmysqldatadir
+grab: grabicingadir grabmysqldatadir mvdatadir
 
 grabmysqldatadir:
 	-mkdir -p datadir
 	docker cp `cat mysqltemp`:/var/lib/mysql datadir/
 	sudo chown -R $(user). datadir/mysql
-	echo `pwd`/datadir/mysql > MYSQL_DATADIR
 
-grabapachedir:
-	-mkdir -p datadir
-	docker cp `cat cid`:/var/www/html datadir/
-	sudo chown -R $(user). datadir/html
-	echo `pwd`/datadir/html > APACHE_DATADIR
+grabicingadir:
+	-mkdir -p datadir/lib
+	-mkdir -p datadir/etc
+	docker cp `cat cid`:/var/lib/icinga2 - |sudo tar -C datadir/lib/ -pxvf -
+	docker cp `cat cid`:/etc/icinga - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat cid`:/etc/icinga2 - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat cid`:/etc/icinga2-classicui - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat cid`:/etc/icingaweb2 - |sudo tar -C datadir/etc/ -pxvf -
 
-APACHE_DATADIR:
-	@while [ -z "$$APACHE_DATADIR" ]; do \
-		read -r -p "Enter the destination of the Apache data directory you wish to associate with this container [APACHE_DATADIR]: " APACHE_DATADIR; echo "$$APACHE_DATADIR">>APACHE_DATADIR; cat APACHE_DATADIR; \
-	done ;
+mvdatadir:
+	sudo mv datadir /tmp
+	echo /tmp/datadir > DATADIR
+	echo "Move datadir out of tmp and update DATADIR here accordingly for persistence"
 
-MYSQL_DATADIR:
-	@while [ -z "$$MYSQL_DATADIR" ]; do \
-		read -r -p "Enter the destination of the MySQL data directory you wish to associate with this container [MYSQL_DATADIR]: " MYSQL_DATADIR; echo "$$MYSQL_DATADIR">>MYSQL_DATADIR; cat MYSQL_DATADIR; \
+DATADIR:
+	@while [ -z "$$DATADIR" ]; do \
+		read -r -p "Enter the destination of the data directory you wish to associate with this container [DATADIR]: " DATADIR; echo "$$DATADIR">>DATADIR; cat DATADIR; \
 	done ;
 
 MYSQL_PASS:
