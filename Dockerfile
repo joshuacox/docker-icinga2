@@ -98,8 +98,8 @@ RUN chmod u+x /entrypoint.sh
 
 # configure PHP timezone
 # RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php.ini
-RUN sed -i 's/;date.timezone =/date.timezone = CST/g' /etc/php5/apache2/php.ini
-RUN sed -i 's/;date.timezone =/date.timezone = CST/g' /etc/php5/cli/php.ini
+RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/apache2/php.ini
+RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/cli/php.ini
 
 # ports (icinga2 api & cluster (5665), mysql (3306))
 EXPOSE 22 80 443 5665 3306
