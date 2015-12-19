@@ -89,19 +89,12 @@ RUN mkdir -p /var/log/supervisor; \
  find /etc/icingaweb2 -type f -name "*.ini" -exec chmod 660 {} \; ; \
  find /etc/icingaweb2 -type d -exec chmod 2770 {} \;
 
-<<<<<<< HEAD
-# Enable IDO for MySQL. This is needed by icinga-web.
-RUN icinga2 feature enable ido-mysql
-=======
 # includes supervisor config
 ADD content/ /
 RUN chmod u+x /opt/icinga2/initdocker
->>>>>>> jessie
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod u+x /entrypoint.sh
-
-
 
 # configure PHP timezone
 # RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php.ini
