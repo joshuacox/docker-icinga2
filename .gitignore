@@ -1,2 +1,9 @@
 cid
 mysql
+mysqlcid
+mysqltemp
+jessie
+datadir
+APACHE_DATADIR
+MYSQL_DATADIR
+MYSQL_PASS
