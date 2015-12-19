@@ -1,9 +1,9 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
-FROM local-jessie
+FROM debian:jessie
 MAINTAINER josh at webhosting coop
 
 # Environment variables
-ENV DOCKER_ICINGA2_UPDATED 20150403
+ENV DOCKER_ICINGA2_UPDATED 20151219
 ENV DEBIAN_FRONTEND noninteractive
 # for systemd
 ENV container docker
