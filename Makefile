@@ -1,10 +1,5 @@
 .PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs
 
-user = $(shell whoami)
-ifeq ($(user),root)
-$(error  "do not run as root! run 'gpasswd -a USER docker' on the user of your choice")
-endif
-
 all: help
 
 help:
@@ -140,7 +135,7 @@ mysqlcid:
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
-	mysql:latest
+	local-mysql
 
 rmmysql: mysqlcid-rmkill
 
@@ -156,7 +151,7 @@ mysqltemp:
 	--name `cat NAME`-mysqltemp \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
-	mysql:latest
+	local-mysql
 
 rmmysqltemp: mysqltemp-rmkill
 

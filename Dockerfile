@@ -33,7 +33,12 @@ rm -Rf /var/lib/apt/lists/*
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Enable IDO for MySQL. This is needed by icinga-web.
+# Enable checker for clustering
+# Enable notification 
+# RUN icinga2 feature enable ido-mysql checker notification
 RUN icinga2 feature enable ido-mysql
+RUN icinga2 feature enable checker
+RUN icinga2 feature enable notification
 
 # create api certificates and users (will be overridden later)
 RUN icinga2 api setup
