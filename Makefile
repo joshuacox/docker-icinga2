@@ -43,6 +43,8 @@ prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
 # what needs to be run in the live container upon startup
 
 rundocker:
+	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
+	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
@@ -59,6 +61,8 @@ rundocker:
 	-t $(TAG)
 
 runmysqltemp:
+	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
+	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
@@ -136,6 +140,8 @@ TAG:
 # use these to generate a mysql container that may or may not be persistent
 
 mysqlcid:
+	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
+	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval DATADIR := $(shell cat DATADIR))
 	docker run \
 	$(NODE_RESTRICTION) \
@@ -156,6 +162,8 @@ mysqlcid-rmkill:
 
 # This one is ephemeral and will not persist data
 mysqltemp:
+	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
+	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	docker run \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
