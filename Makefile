@@ -48,6 +48,7 @@ rundocker:
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval MY_NET := $(shell cat MY_NET))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	docker \
@@ -57,6 +58,7 @@ rundocker:
 	$(DOCKER_OPTS) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
+	--net=$(MY_NET) \
 	-d \
 	-P \
 	-v /var/run/docker.sock:/run/docker.sock \
@@ -68,6 +70,7 @@ runmysqltemp:
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval MY_NET := $(shell cat MY_NET))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	docker \
@@ -77,6 +80,7 @@ runmysqltemp:
 	$(DOCKER_OPTS) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
+	--net=$(MY_NET) \
 	-d \
 	-P \
 	--link `cat NAME`-mysqltemp:mysql \
@@ -90,6 +94,7 @@ runprod:
 	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
+	$(eval MY_NET := $(shell cat MY_NET))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	docker \
@@ -99,6 +104,7 @@ runprod:
 	$(DOCKER_OPTS) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
+	--net=$(MY_NET) \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
@@ -150,6 +156,8 @@ mysqlcid:
 	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval DATADIR := $(shell cat DATADIR))
+	$(eval NAME := $(shell cat NAME))
+	$(eval MY_NET := $(shell cat MY_NET))
 	docker \
 	$(DOCKER_HOST) \
 	run \
@@ -158,6 +166,7 @@ mysqlcid:
 	$(DOCKER_OPTS) \
 	--cidfile="mysqlcid" \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
+	--net=$(MY_NET) \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	local-mysql
@@ -173,6 +182,8 @@ mysqlcid-rmkill:
 mysqltemp:
 	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
+	$(eval NAME := $(shell cat NAME))
+	$(eval MY_NET := $(shell cat MY_NET))
 	docker \
 	$(DOCKER_HOST) \
 	run \
@@ -181,6 +192,7 @@ mysqltemp:
 	$(DOCKER_OPTS) \
 	--cidfile="mysqltemp" \
 	--name `cat NAME`-mysqltemp \
+	--net=$(MY_NET) \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	local-mysql
