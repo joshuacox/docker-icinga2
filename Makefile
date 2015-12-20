@@ -43,13 +43,16 @@ prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
 # what needs to be run in the live container upon startup
 
 rundocker:
+	$(eval DOCKER_HOST := $(shell cat DOCKER_HOST))
 	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
-	@docker run --name=$(NAME) \
+	docker \
+	$(DOCKER_HOST) \
+	run --name=$(NAME) \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="cid" \
@@ -67,7 +70,9 @@ runmysqltemp:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
-	@docker run --name=$(NAME) \
+	docker \
+	$(DOCKER_HOST) \
+	run --name=$(NAME) \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="cid" \
@@ -87,7 +92,9 @@ runprod:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
-	@docker run --name=$(NAME) \
+	docker \
+	$(DOCKER_HOST) \
+	run --name=$(NAME) \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="cid" \
@@ -143,11 +150,13 @@ mysqlcid:
 	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval DATADIR := $(shell cat DATADIR))
-	docker run \
+	docker \
+	$(DOCKER_HOST) \
+	run \
+	--name `cat NAME`-mysql \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="mysqlcid" \
-	--name `cat NAME`-mysql \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
@@ -164,7 +173,10 @@ mysqlcid-rmkill:
 mysqltemp:
 	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
 	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
-	docker run \
+	docker \
+	$(DOCKER_HOST) \
+	run \
+	--name `cat NAME`-mysql \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="mysqltemp" \
