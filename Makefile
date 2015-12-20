@@ -83,7 +83,6 @@ runmysqltemp:
 	--net=$(MY_NET) \
 	-d \
 	-P \
-	--link `cat NAME`-mysqltemp:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
@@ -109,7 +108,6 @@ runprod:
 	-p 4080:80 \
 	-p 4443:443 \
 	-p 4665:5665 \
-	--link `cat NAME`-mysql:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
 	-v $(DATADIR)/etc/icinga:/etc/icinga \
@@ -161,7 +159,7 @@ mysqlcid:
 	docker \
 	$(DOCKER_HOST) \
 	run \
-	--name `cat NAME`-mysql \
+	--name mysql \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="mysqlcid" \
@@ -187,7 +185,7 @@ mysqltemp:
 	docker \
 	$(DOCKER_HOST) \
 	run \
-	--name `cat NAME`-mysql \
+	--name mysql \
 	$(NODE_RESTRICTION) \
 	$(DOCKER_OPTS) \
 	--cidfile="mysqltemp" \
