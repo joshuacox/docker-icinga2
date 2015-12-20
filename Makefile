@@ -48,6 +48,8 @@ rundocker:
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
+	$(NODE_RESTRICTION) \
+	$(DOCKER_OPTS) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-d \
@@ -62,6 +64,8 @@ runmysqltemp:
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
+	$(NODE_RESTRICTION) \
+	$(DOCKER_OPTS) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-d \
@@ -72,12 +76,16 @@ runmysqltemp:
 	-t $(TAG)
 
 runprod:
+	$(eval DOCKER_OPTS := $(shell cat DOCKER_OPTS))
+	$(eval NODE_RESTRICTION := $(shell cat NODE_RESTRICTION))
 	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
+	$(NODE_RESTRICTION) \
+	$(DOCKER_OPTS) \
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-d \
@@ -130,6 +138,8 @@ TAG:
 mysqlcid:
 	$(eval DATADIR := $(shell cat DATADIR))
 	docker run \
+	$(NODE_RESTRICTION) \
+	$(DOCKER_OPTS) \
 	--cidfile="mysqlcid" \
 	--name `cat NAME`-mysql \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
@@ -147,6 +157,8 @@ mysqlcid-rmkill:
 # This one is ephemeral and will not persist data
 mysqltemp:
 	docker run \
+	$(NODE_RESTRICTION) \
+	$(DOCKER_OPTS) \
 	--cidfile="mysqltemp" \
 	--name `cat NAME`-mysqltemp \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
