@@ -108,6 +108,7 @@ runprod:
 	-p 4080:80 \
 	-p 4443:443 \
 	-p 4665:5665 \
+	--restart=always \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
 	-v $(DATADIR)/etc/icinga:/etc/icinga \
