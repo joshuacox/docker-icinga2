@@ -141,6 +141,8 @@ mysqlcid:
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:latest
+	@echo 'pausing for mysql to settle'
+	sleep 3
 
 rmmysql: mysqlcid-rmkill
 
@@ -157,6 +159,8 @@ mysqltemp:
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	mysql:latest
+	@echo 'pausing for mysql to settle'
+	sleep 3
 
 rmmysqltemp: mysqltemp-rmkill
 
