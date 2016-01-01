@@ -142,7 +142,7 @@ mysqlcid:
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:latest
 	@echo 'pausing for mysql to settle'
-	sleep 3
+	sleep 11
 
 rmmysql: mysqlcid-rmkill
 
@@ -160,7 +160,7 @@ mysqltemp:
 	-d \
 	mysql:latest
 	@echo 'pausing for mysql to settle'
-	sleep 3
+	sleep 11
 
 rmmysqltemp: mysqltemp-rmkill
 
