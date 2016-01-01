@@ -24,8 +24,8 @@ echo "deb http://debmon.org/debmon debmon-jessie main" >> /etc/apt/sources.list 
 echo "deb http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
 echo "deb-src http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
 apt-get -qq update ; \
-apt-get -qqy --no-install-recommends install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 ; \
-apt-get -qqy install --no-install-recommends fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins icli nagios-plugins-contrib monitoring-plugins ; \
+apt-get -qqy --no-install-recommends install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 \
+fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins icli nagios-plugins-contrib monitoring-plugins ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
 
