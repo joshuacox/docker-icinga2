@@ -109,8 +109,8 @@ COPY www/index.html /var/www/html/index.html
 #COPY nconfinit.sh /tmp/nconfinit.sh
 #RUN bash /tmp/nconfinit.sh
 
-COPY gitmodules.sh /tmp/
-RUN bash /tmp/gitmodules.sh
+#COPY gitmodules.sh /tmp/
+#RUN bash /tmp/gitmodules.sh
 
 # ports (icinga2 api & cluster (5665), mysql (3306))
 EXPOSE 22 80 443 5665 3306
