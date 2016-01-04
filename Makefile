@@ -1,10 +1,5 @@
 .PHONY: all help build run builddocker rundocker kill rm-image rm clean enter logs
 
-user = $(shell whoami)
-ifeq ($(user),root)
-$(error  "do not run as root! run 'gpasswd -a USER docker' on the user of your choice")
-endif
-
 all: help
 
 help:
@@ -29,23 +24,6 @@ temp: MYSQL_PASS rm build mysqltemp runmysqltemp
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
 prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
 
-## useful hints
-## specifiy ports
-#-p 44180:80 \
-#-p 27005:27005/udp \
-## link another container
-#--link some-mysql:mysql \
-## assign environmant variables
-#--env STEAM_USERNAME=`cat steam_username` \
-#--env STEAM_PASSWORD=`cat steam_password` \
-
-# change uid in the container for easy dev work
-# first you need to determin your user:
-# $(eval UID := $(shell id -u))
-# then you need to insert this as a env var:
-# -e "DOCKER_UID=$(UID)" \
-# then look at chguid.sh for an example of 
-# what needs to be run in the live container upon startup
 
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
@@ -142,7 +120,8 @@ mysqlcid:
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:latest
 	@echo 'pausing for mysql to settle'
-	sleep 11
+	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make prod" again'
+	-@bash wait.sh
 
 rmmysql: mysqlcid-rmkill
 
@@ -160,7 +139,8 @@ mysqltemp:
 	-d \
 	mysql:latest
 	@echo 'pausing for mysql to settle'
-	sleep 11
+	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make temp" again'
+	-@bash wait.sh
 
 rmmysqltemp: mysqltemp-rmkill
 
@@ -202,3 +182,5 @@ MYSQL_PASS:
 		read -r -p "Enter the MySQL password you wish to associate with this container [MYSQL_PASS]: " MYSQL_PASS; echo "$$MYSQL_PASS">>MYSQL_PASS; cat MYSQL_PASS; \
 	done ;
 
+wait:
+	bash wait.sh

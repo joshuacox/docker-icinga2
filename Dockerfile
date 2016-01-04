@@ -101,6 +101,14 @@ RUN chmod u+x /entrypoint.sh
 RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/apache2/php.ini
 RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/cli/php.ini
 
+# redirect
+COPY www/index.html /var/www/html/index.html
+
+# nconf
+#RUN ls /usr/share/doc/icinga-idoutils
+#COPY nconfinit.sh /tmp/nconfinit.sh
+#RUN bash /tmp/nconfinit.sh
+
 # ports (icinga2 api & cluster (5665), mysql (3306))
 EXPOSE 22 80 443 5665 3306
 
