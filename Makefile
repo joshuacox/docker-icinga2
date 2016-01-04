@@ -155,7 +155,7 @@ grab: grabicingadir grabmysqldatadir mvdatadir
 
 grabmysqldatadir:
 	-mkdir -p datadir
-	docker cp `cat mysqltemp`:/var/lib/mysql datadir/
+	docker cp `cat mysqltemp`:/var/lib/mysql  - |sudo tar -C datadir/ -pxvf -
 	sudo chown -R $(user). datadir/mysql
 
 grabicingadir:
