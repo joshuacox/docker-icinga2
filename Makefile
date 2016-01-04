@@ -76,6 +76,28 @@ runprod:
 	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
 
+debug:
+	$(eval DATADIR := $(shell cat DATADIR))
+	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	$(eval NAME := $(shell cat NAME))
+	$(eval TAG := $(shell cat TAG))
+	chmod 777 $(TMP)
+	@docker run --name=$(NAME) \
+	--cidfile="cid" \
+	-d \
+	-p 4080:80 \
+	-p 4443:443 \
+	-p 4665:5665 \
+	--link `cat NAME`-mysql:mysql \
+	-v /var/run/docker.sock:/run/docker.sock \
+	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
+	-v $(DATADIR)/etc/icinga:/etc/icinga \
+	-v $(DATADIR)/etc/icinga2:/etc/icinga2 \
+	-v $(DATADIR)/etc/icinga2-classicui:/etc/icinga2-classicui \
+	-v $(DATADIR)/etc/icingaweb2:/etc/icingaweb2 \
+	-v $(shell which docker):/bin/docker \
+	-t $(TAG) /bin/bash
+
 builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
 
