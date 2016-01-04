@@ -62,7 +62,6 @@ runprod:
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
-	-v $(TMP):/tmp \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
