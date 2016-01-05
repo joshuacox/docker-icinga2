@@ -97,5 +97,7 @@ EOF
 
 fi
 
+mkdir /run/icinga2
+chown nagios. /run/icinga2
 echo_log "Starting Supervisor. CTRL-C will stop the container."
 /usr/bin/supervisord -c /etc/supervisord.conf >> /dev/null
