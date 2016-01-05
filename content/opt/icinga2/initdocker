@@ -67,9 +67,12 @@ if [ ! -f "${initfile}" ]; then
         # enable icinga2 features if not already there
         icinga2 feature enable ido-mysql command
 
+        mkdir -p /etc/icingaweb2/enabledModules
         echo_log "Enabling icingaweb2 modules."
         if [[ -L /etc/icingaweb2/enabledModules/monitoring ]]; then echo "Symlink for /etc/icingaweb2/enabledModules/monitoring exists already...skipping"; else ln -s /usr/share/icingaweb2/modules/monitoring /etc/icingaweb2/enabledModules/monitoring; fi
         if [[ -L /etc/icingaweb2/enabledModules/doc ]]; then echo "Symlink for /etc/icingaweb2/enabledModules/doc exists already...skipping"; else ln -s /usr/share/icingaweb2/modules/doc /etc/icingaweb2/enabledModules/doc; fi
+        if [[ -L /etc/icingaweb2/enabledModules/setup ]]; then echo "Symlink for /etc/icingaweb2/enabledModules/setup exists already...skipping"; else ln -s /usr/share/icingaweb2/modules/setup /etc/icingaweb2/enabledModules/setup; fi
+        if [[ -L /etc/icingaweb2/enabledModules/iframe ]]; then echo "Symlink for /etc/icingaweb2/enabledModules/iframe exists already...skipping"; else ln -s /usr/share/icingaweb2/modules/iframe /etc/icingaweb2/enabledModules/iframe; fi
 
         touch ${initfile}
 fi

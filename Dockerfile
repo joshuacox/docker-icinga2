@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER josh at webhosting coop
 
 # Environment variables
-ENV DOCKER_ICINGA2_UPDATED 20151219
+ENV DOCKER_ICINGA2_UPDATED 20160104
 ENV DEBIAN_FRONTEND noninteractive
 # for systemd
 ENV container docker
