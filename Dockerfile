@@ -33,7 +33,7 @@ apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
 
 # Add supervisord configuration
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+#COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Enable IDO for MySQL. This is needed by icinga-web.
 RUN icinga2 feature enable ido-mysql
@@ -92,6 +92,7 @@ RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/ss
  #find /etc/icingaweb2 -type f -name "*.ini" -exec chmod 660 {} \; ; \
  #find /etc/icingaweb2 -type d -exec chmod 2770 {} \;
 
+RUN mkdir -p /var/log/supervisor
 # includes supervisor config
 ADD content/ /
 RUN chmod u+x /opt/icinga2/initdocker
