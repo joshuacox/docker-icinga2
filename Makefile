@@ -52,7 +52,7 @@ runmysqltemp:
 	--link `cat NAME`-mysqltemp:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
-	-t $(TAG)
+	-t $(TAG) /bin/bash
 
 runprod:
 	$(eval DATADIR := $(shell cat DATADIR))

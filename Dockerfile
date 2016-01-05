@@ -7,6 +7,7 @@ ENV DOCKER_ICINGA2_UPDATED 20151219
 ENV DEBIAN_FRONTEND noninteractive
 # for systemd
 ENV container docker
+ENV ICINGA2_FEATURE_GRAPHITE true
 
 # Update package lists.
 # Install basic packages.
@@ -16,15 +17,17 @@ ENV container docker
 # When depencencies are pulled in by icinga-web, they seem to be configured too late and configuration
 # of icinga-web fails. To work around this, install dependencies beforehand.
 # Clean up some.
+
+# echo "deb http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
+# echo "deb-src http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
+
 RUN apt-get -qq update; \
 apt-get -qqy install --no-install-recommends sudo procps ca-certificates wget pwgen supervisor; \
 wget -O - http://debmon.org/debmon/repo.key 2>/dev/null | apt-key add - ; \
 echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list ; \
 echo "deb http://debmon.org/debmon debmon-jessie main" >> /etc/apt/sources.list ; \
-echo "deb http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
-echo "deb-src http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
 apt-get -qq update ; \
-apt-get -qqy --no-install-recommends install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 \
+apt-get -qqy install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 \
 unzip fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins icli nagios-plugins-contrib monitoring-plugins ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
@@ -67,27 +70,27 @@ RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/ss
 # 4755 ping is required for icinga user calling check_ping
 # can be circumvented for icinga2.cmd w/ mkfifo and chown
 # (icinga2 does not re-create the file)
-RUN mkdir -p /var/log/supervisor; \
- chmod 4755 /bin/ping /bin/ping6; \
- chown -R icinga:root /etc/icinga2; \
- mkdir -p /etc/icinga2/pki; \
- chown -R icinga:icinga /etc/icinga2/pki; \
- mkdir -p /var/run/icinga2; \
- mkdir -p /var/log/icinga2; \
- chown icinga:icingacmd /var/run/icinga2; \
- chown icinga:icingacmd /var/log/icinga2; \
- mkdir -p /var/run/icinga2/cmd; \
- mkfifo /var/run/icinga2/cmd/icinga2.cmd; \
- chown -R icinga:icingacmd /var/run/icinga2/cmd; \
- chmod 2750 /var/run/icinga2/cmd; \
- chown -R icinga:icinga /var/lib/icinga2; \
- usermod -a -G icingacmd apache >> /dev/null; \
- chown root:icingaweb2 /etc/icingaweb2; \
- chmod 2770 /etc/icingaweb2; \
- mkdir -p /etc/icingaweb2/enabledModules; \
- chown -R apache:icingaweb2 /etc/icingaweb2/*; \
- find /etc/icingaweb2 -type f -name "*.ini" -exec chmod 660 {} \; ; \
- find /etc/icingaweb2 -type d -exec chmod 2770 {} \;
+#RUN mkdir -p /var/log/supervisor; \
+ #chmod 4755 /bin/ping /bin/ping6; \
+ #chown -R icinga:root /etc/icinga2; \
+ #mkdir -p /etc/icinga2/pki; \
+ #chown -R icinga:icinga /etc/icinga2/pki; \
+ #mkdir -p /var/run/icinga2; \
+ #mkdir -p /var/log/icinga2; \
+ #chown icinga:icingacmd /var/run/icinga2; \
+ #chown icinga:icingacmd /var/log/icinga2; \
+ #mkdir -p /var/run/icinga2/cmd; \
+ #mkfifo /var/run/icinga2/cmd/icinga2.cmd; \
+ #chown -R icinga:icingacmd /var/run/icinga2/cmd; \
+ #chmod 2750 /var/run/icinga2/cmd; \
+ #chown -R icinga:icinga /var/lib/icinga2; \
+ #usermod -a -G icingacmd apache >> /dev/null; \
+ #chown root:icingaweb2 /etc/icingaweb2; \
+ #chmod 2770 /etc/icingaweb2; \
+ #mkdir -p /etc/icingaweb2/enabledModules; \
+ #chown -R apache:icingaweb2 /etc/icingaweb2/*; \
+ #find /etc/icingaweb2 -type f -name "*.ini" -exec chmod 660 {} \; ; \
+ #find /etc/icingaweb2 -type d -exec chmod 2770 {} \;
 
 # includes supervisor config
 ADD content/ /
