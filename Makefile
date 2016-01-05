@@ -67,7 +67,7 @@ runprod:
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
-	-p 4665:5665 \
+	-p 5665:5665 \
 	--link `cat NAME`-mysql:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
@@ -89,7 +89,7 @@ debug:
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
-	-p 4665:5665 \
+	-p 5665:5665 \
 	--link `cat NAME`-mysql:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
