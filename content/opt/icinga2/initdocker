@@ -100,6 +100,8 @@ fi
 #cp /etc/icinga2/features-enabled/ido-mysql.conf.template /etc/icinga2/features-enabled/ido-mysql.conf
 #sed -i "s/MYSQL_PORT_3306_TCP_ADDR/$MYSQL_PORT_3306_TCP_ADDR/g" /etc/icinga2/features-enabled/ido-mysql.conf
 mkdir /run/icinga2
+mkdir /var/log/icingaweb2
+chmod 777 /var/log/icingaweb2
 chown nagios. /run/icinga2
 echo_log "Starting Supervisor. CTRL-C will stop the container."
 /usr/bin/supervisord -c /etc/supervisord.conf >> /dev/null
