@@ -141,7 +141,7 @@ mysqlcid:
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
-	mysql:latest
+	mysql:5.6
 	@echo 'pausing for mysql to settle'
 	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make prod" again'
 	-@bash wait.sh
@@ -160,7 +160,7 @@ mysqltemp:
 	--name `cat NAME`-mysqltemp \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
-	mysql:latest
+	mysql:5.6
 	@echo 'pausing for mysql to settle'
 	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make temp" again'
 	-@bash wait.sh
