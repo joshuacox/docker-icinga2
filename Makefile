@@ -48,7 +48,9 @@ runmysqltemp:
 	--cidfile="cid" \
 	-v $(TMP):/tmp \
 	-d \
-	-P \
+	-p 4080:80 \
+	-p 4443:443 \
+	-p 4665:5665 \
 	--link `cat NAME`-mysqltemp:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
