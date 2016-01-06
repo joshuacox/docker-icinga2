@@ -74,6 +74,13 @@ if [ ! -f "${initfile}" ]; then
         if [[ -L /etc/icingaweb2/enabledModules/setup ]]; then echo "Symlink for /etc/icingaweb2/enabledModules/setup exists already...skipping"; else ln -s /usr/share/icingaweb2/modules/setup /etc/icingaweb2/enabledModules/setup; fi
         if [[ -L /etc/icingaweb2/enabledModules/iframe ]]; then echo "Symlink for /etc/icingaweb2/enabledModules/iframe exists already...skipping"; else ln -s /usr/share/icingaweb2/modules/iframe /etc/icingaweb2/enabledModules/iframe; fi
 
+        #initialize icinga ido-mysql.conf
+        cp /etc/icinga2/ido-mysql.conf.template /etc/icinga2/features-enabled/ido-mysql.conf
+        sed -i "s/MYSQL_PORT_3306_TCP_ADDR/$MYSQL_PORT_3306_TCP_ADDR/g" /etc/icinga2/features-enabled/ido-mysql.conf
+        sed -i "s/MYSQL_ENV_MYSQL_ROOT_PASSWORD/$MYSQL_ENV_MYSQL_ROOT_PASSWORD/g" /etc/icinga2/features-enabled/ido-mysql.conf
+        chmod 600 /etc/icinga2/features-enabled/ido-mysql.conf
+        chown nagios. /etc/icinga2/features-enabled/ido-mysql.conf
+
         touch ${initfile}
 fi
 
@@ -97,8 +104,6 @@ EOF
 
 fi
 
-#cp /etc/icinga2/features-enabled/ido-mysql.conf.template /etc/icinga2/features-enabled/ido-mysql.conf
-#sed -i "s/MYSQL_PORT_3306_TCP_ADDR/$MYSQL_PORT_3306_TCP_ADDR/g" /etc/icinga2/features-enabled/ido-mysql.conf
 mkdir /run/icinga2
 mkdir /var/log/icingaweb2
 chmod 777 /var/log/icingaweb2

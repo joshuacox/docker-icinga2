@@ -97,9 +97,6 @@ RUN mkdir -p /var/log/supervisor
 ADD content/ /
 RUN chmod u+x /opt/icinga2/initdocker
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod u+x /entrypoint.sh
-
 # configure PHP timezone
 # RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php.ini
 RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/apache2/php.ini
@@ -126,6 +123,3 @@ VOLUME ["/etc/icinga2", "/etc/icingaweb2", "/var/lib/icinga2", "/usr/share/icing
 # CMD ["/bin/bash"]
 CMD ["/opt/icinga2/initdocker"]
 #ENTRYPOINT ["/opt/icinga2/initdocker"]
-# Initialize and run Supervisor
-#ENTRYPOINT ["/entrypoint.sh"]
-#CMD ["/usr/bin/supervisord"]
