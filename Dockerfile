@@ -28,7 +28,7 @@ echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sourc
 echo "deb http://debmon.org/debmon debmon-jessie main" >> /etc/apt/sources.list ; \
 apt-get -qq update ; \
 apt-get -qqy install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 \
-unzip fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins icli nagios-plugins-contrib monitoring-plugins ; \
+unzip fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins icli nagios-plugins-contrib monitoring-plugins nagios-snmp-plugins ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*
 
