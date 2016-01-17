@@ -59,3 +59,36 @@ The classic UI has no users defined, so you will not be able to log in. To creat
 htpasswd /path/to/volume/classicui/htpasswd.users icingaadmin
 ```
 
+### Icinga Web 2
+
+Icinga Web 2 can be accessed at http://localhost:3080/icingaweb2 w/ `icingaadmin:icinga` as credentials.
+
+The configuration is located in /etc/icingaweb2 which is exposed as [volume](#volumes) from
+docker.
+
+By default the icingaweb2 database is created including the `icingaadmin` user. Additional
+configuration is also added to skip the setup wizard.
+
+## Ports
+
+The following ports are exposed:
+
+  Port     | Service
+  ---------|---------
+  22       | SSH
+  80       | HTTP
+  443      | HTTPS
+  3306     | MySQL
+  5665     | Icinga 2 API & Cluster
+
+## Volumes
+
+These volumes can be mounted in order to test and develop various stuff.
+
+    /etc/icinga2
+    /etc/icingaweb2
+
+    /var/lib/icinga2
+    /usr/share/icingaweb2
+
+    /var/lib/mysql
