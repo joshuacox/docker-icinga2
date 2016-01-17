@@ -61,7 +61,7 @@ htpasswd /path/to/volume/classicui/htpasswd.users icingaadmin
 
 ### Icinga Web 2
 
-Icinga Web 2 can be accessed at http://localhost:3080/icingaweb2 w/ `icingaadmin:icinga` as credentials.
+Icinga Web 2 can be accessed at http://localhost:3080/icingaweb2 w/ `icingaadmin:icinga` as credentials. (these should be changed immediately)
 
 The configuration is located in /etc/icingaweb2 which is exposed as [volume](#volumes) from
 docker.
