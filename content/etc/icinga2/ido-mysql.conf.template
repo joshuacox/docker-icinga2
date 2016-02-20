@@ -8,6 +8,6 @@ library "db_ido_mysql"
 object IdoMysqlConnection "ido-mysql" {
   user = "icinga",
   password = "MYSQL_ENV_MYSQL_ROOT_PASSWORD",
-  host = "MYSQL_PORT_3306_TCP_ADDR",
+  host = "mysql",
   database = "icinga"
 }
