@@ -207,15 +207,15 @@ wait:
 	bash wait.sh
 
 update:
-	docker exec -i -t `cat cid` 'icinga2 node update-config'
+	docker exec -i -t `cat cid` '/usr/sbin/icinga2 node update-config'
 
 pki:
 	-@rm -f NEW_PKI_CN
 	@while [ -z "$$NEW_PKI_CN" ]; do \
 		read -r -p "Enter the common name (CN) you wish to this icinga2 instance [NEW_PKI_CN]: " NEW_PKI_CN; echo "'$$NEW_PKI_CN'">NEW_PKI_CN; cat NEW_PKI_CN; \
 	done ;
-	docker exec -i -t `cat cid` "icinga2 pki ticket --cn `cat NEW_PKI_CN`"
+	docker exec -i -t `cat cid` "/usr/sbin/icinga2 pki ticket --cn `cat NEW_PKI_CN`"
 	-@rm -f NEW_PKI_CN
 
 nodelist:
-	docker exec -i -t `cat cid` 'icinga2 node list'
+	docker exec -i -t `cat cid` '/usr/sbin/icinga2 node list'
