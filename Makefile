@@ -24,7 +24,6 @@ temp: MYSQL_PASS rm build mysqltemp runmysqltemp
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
 prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
 
-
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
@@ -122,12 +121,12 @@ logs:
 
 NAME:
 	@while [ -z "$$NAME" ]; do \
-		read -r -p "Enter the name you wish to associate with this container [NAME]: " NAME; echo "$$NAME">>NAME; cat NAME; \
+		read -r -p "Enter the name you wish to associate with this container [NAME]: " NAME; echo "$$NAME">NAME; cat NAME; \
 	done ;
 
 TAG:
 	@while [ -z "$$TAG" ]; do \
-		read -r -p "Enter the tag you wish to associate with this container [TAG]: " TAG; echo "$$TAG">>TAG; cat TAG; \
+		read -r -p "Enter the tag you wish to associate with this container [TAG]: " TAG; echo "$$TAG">TAG; cat TAG; \
 	done ;
 
 # MYSQL additions
@@ -196,13 +195,25 @@ mvdatadir:
 
 DATADIR:
 	@while [ -z "$$DATADIR" ]; do \
-		read -r -p "Enter the destination of the data directory you wish to associate with this container [DATADIR]: " DATADIR; echo "$$DATADIR">>DATADIR; cat DATADIR; \
+		read -r -p "Enter the destination of the data directory you wish to associate with this container [DATADIR]: " DATADIR; echo "$$DATADIR">DATADIR; cat DATADIR; \
 	done ;
 
 MYSQL_PASS:
 	@while [ -z "$$MYSQL_PASS" ]; do \
-		read -r -p "Enter the MySQL password you wish to associate with this container [MYSQL_PASS]: " MYSQL_PASS; echo "$$MYSQL_PASS">>MYSQL_PASS; cat MYSQL_PASS; \
+		read -r -p "Enter the MySQL password you wish to associate with this container [MYSQL_PASS]: " MYSQL_PASS; echo "$$MYSQL_PASS">MYSQL_PASS; cat MYSQL_PASS; \
 	done ;
 
 wait:
 	bash wait.sh
+
+update:
+	docker exec -i -t `cat cid` 'icinga2 node update-config'
+
+pki:
+	-@rm -f NEW_PKI_CN
+	@while [ -z "$$NEW_PKI_CN" ]; do \
+		read -r -p "Enter the common name (CN) you wish to this icinga2 instance [NEW_PKI_CN]: " NEW_PKI_CN; echo "'$$NEW_PKI_CN'">NEW_PKI_CN; cat NEW_PKI_CN; \
+	done ;
+	docker exec -i -t `cat cid` "icinga2 pki ticket --cn `cat NEW_PKI_CN`"
+	-@rm -f NEW_PKI_CN
+
