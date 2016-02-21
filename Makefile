@@ -217,3 +217,5 @@ pki:
 	docker exec -i -t `cat cid` "icinga2 pki ticket --cn `cat NEW_PKI_CN`"
 	-@rm -f NEW_PKI_CN
 
+nodelist:
+	docker exec -i -t `cat cid` 'icinga2 node list'
