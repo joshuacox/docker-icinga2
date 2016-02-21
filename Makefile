@@ -206,7 +206,9 @@ MYSQL_PASS:
 wait:
 	bash wait.sh
 
-update:
+update: update-config rm prod
+
+update-config:
 	docker exec -i -t `cat cid` sh -c '/usr/sbin/icinga2 node update-config'
 
 pki:
