@@ -68,7 +68,6 @@ runprod:
 	$(eval SMTP_PORT := $(shell cat SMTP_PORT))
 	$(eval DOMAIN := $(shell cat DOMAIN))
 	$(eval HOSTNAME := $(shell cat HOSTNAME))
-	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-d \
