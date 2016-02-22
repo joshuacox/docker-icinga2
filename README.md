@@ -95,7 +95,16 @@ These volumes can be mounted in order to test and develop various stuff.
 
 ### SMTP 
 
-To enable mail you'll need to define the `$SMTP_ENABLED` variable which will then allow you to configure `/etc/ssmtp/ssmtp.conf` by setting the rest of the variables 
+To enable mail you'll need to issue the 'mailvars' recipe
+
+```
+make mailvars
+```
+
+it will prompt you for everything or if you want to do it manually 
+
+define the `$SMTP_ENABLED` variable which will then allow you to configure `/etc/ssmtp/ssmtp.conf`
+by setting the rest of the variables 
 the following variables need to be set:
 
 ```
