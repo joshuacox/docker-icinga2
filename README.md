@@ -92,3 +92,25 @@ These volumes can be mounted in order to test and develop various stuff.
     /usr/share/icingaweb2
 
     /var/lib/mysql
+
+### SMTP 
+
+To enable mail you'll need to define the `$SMTP_ENABLED` variable which will then allow you to configure `/etc/ssmtp/ssmtp.conf` by setting the rest of the variables 
+the following variables need to be set:
+
+```
+if [ -n $SMTP_ENABLED ]; then
+  echo_log "Enabling SMTP."
+cat <<EOF >/etc/ssmtp/ssmtp.conf
+root=postmaster
+AuthUser=$SMTP_USER
+AuthPass=$SMTP_PASS
+mailhub=$SMTP_DOMAIN:$SMTP_PORT
+UseSTARTTLS=YES
+rewriteDomain=$DOMAIN
+hostname=$HOSTNAME
+FromLineOverride=YES
+EOF
+```
+
+

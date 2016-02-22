@@ -84,6 +84,20 @@ if [ ! -f "${initfile}" ]; then
         touch ${initfile}
 fi
 
+if [ -n $SMTP_ENABLED ]; then
+  echo_log "Enabling SMTP."
+cat <<EOF >/etc/ssmtp/ssmtp.conf
+root=postmaster
+AuthUser=$SMTP_USER
+AuthPass=$SMTP_PASS
+mailhub=$SMTP_DOMAIN:$SMTP_PORT
+UseSTARTTLS=YES
+rewriteDomain=$DOMAIN
+hostname=$HOSTNAME
+FromLineOverride=YES
+EOF
+
+
 if [ -n $ICINGA2_FEATURE_GRAPHITE ]; then
   echo_log "Enabling Icinga 2 Graphite feature."
   icinga2 feature enable graphite

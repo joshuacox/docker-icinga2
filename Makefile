@@ -24,6 +24,8 @@ temp: MYSQL_PASS rm build mysqltemp runmysqltemp
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
 prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
 
+mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
+
 rundocker:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
@@ -57,9 +59,15 @@ runmysqltemp:
 
 runprod:
 	$(eval DATADIR := $(shell cat DATADIR))
-	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
+	$(eval SMTP_ENABLED := $(shell cat SMTP_ENABLED))
+	$(eval SMTP_USER := $(shell cat SMTP_USER))
+	$(eval SMTP_PASS := $(shell cat SMTP_PASS))
+	$(eval SMTP_DOMAIN := $(shell cat SMTP_DOMAIN))
+	$(eval SMTP_PORT := $(shell cat SMTP_PORT))
+	$(eval DOMAIN := $(shell cat DOMAIN))
+	$(eval HOSTNAME := $(shell cat HOSTNAME))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
@@ -67,6 +75,13 @@ runprod:
 	-p 4080:80 \
 	-p 4443:443 \
 	-p 5665:5665 \
+	--env="SMTP_ENABLED=$(SMTP_ENABLED)" \
+	--env="SMTP_USER=$(SMTP_USER)" \
+	--env="SMTP_PASS=$(SMTP_PASS)" \
+	--env="SMTP_DOMAIN=$(SMTP_DOMAIN)" \
+	--env="SMTP_PORT=$(SMTP_PORT)" \
+	--env="DOMAIN=$(DOMAIN)" \
+	--env="HOSTNAME=$(HOSTNAME)" \
 	--link `cat NAME`-mysql:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
@@ -127,6 +142,41 @@ NAME:
 TAG:
 	@while [ -z "$$TAG" ]; do \
 		read -r -p "Enter the tag you wish to associate with this container [TAG]: " TAG; echo "$$TAG">TAG; cat TAG; \
+	done ;
+
+DOMAIN:
+	@while [ -z "$$DOMAIN" ]; do \
+		read -r -p "Enter the DOMAIN you wish to associate with this container [DOMAIN]: " DOMAIN; echo "$$DOMAIN">DOMAIN; cat DOMAIN; \
+	done ;
+
+HOSTNAME:
+	@while [ -z "$$HOSTNAME" ]; do \
+		read -r -p "Enter the HOSTNAME you wish to associate with this container [HOSTNAME]: " HOSTNAME; echo "$$HOSTNAME">HOSTNAME; cat HOSTNAME; \
+	done ;
+
+SMTP_USER:
+	@while [ -z "$$SMTP_USER" ]; do \
+		read -r -p "Enter the smtp_user you wish to associate with this container [SMTP_USER]: " SMTP_USER; echo "$$SMTP_USER">SMTP_USER; cat SMTP_USER; \
+	done ;
+
+SMTP_PASS:
+	@while [ -z "$$SMTP_PASS" ]; do \
+		read -r -p "Enter the smtp_pass you wish to associate with this container [SMTP_PASS]: " SMTP_PASS; echo "$$SMTP_PASS">SMTP_PASS; cat SMTP_PASS; \
+	done ;
+
+SMTP_PORT:
+	@while [ -z "$$SMTP_PORT" ]; do \
+		read -r -p "Enter the port you wish to associate with this container [SMTP_PORT]: " SMTP_PORT; echo "$$SMTP_PORT">SMTP_PORT; cat SMTP_PORT; \
+	done ;
+
+SMTP_ENABLED:
+	@while [ -z "$$SMTP_ENABLED" ]; do \
+		read -r -p "If you wish to enable smtp for this container type anything here [SMTP_ENABLED]: " SMTP_ENABLED; echo "$$SMTP_ENABLED">SMTP_ENABLED; cat SMTP_ENABLED; \
+	done ;
+
+SMTP_DOMAIN:
+	@while [ -z "$$SMTP_DOMAIN" ]; do \
+		read -r -p "Enter the SMTP_DOMAIN you wish to associate with this container [SMTP_DOMAIN]: " SMTP_DOMAIN; echo "$$SMTP_DOMAIN">SMTP_DOMAIN; cat SMTP_DOMAIN; \
 	done ;
 
 # MYSQL additions
