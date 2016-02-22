@@ -86,7 +86,7 @@ fi
 
 if [ -n $SMTP_ENABLED ]; then
   echo_log "Enabling SMTP."
-cat <<EOF >/etc/ssmtp/ssmtp.conf
+cat <<EOF2 >/etc/ssmtp/ssmtp.conf
 root=postmaster
 AuthUser=$SMTP_USER
 AuthPass=$SMTP_PASS
@@ -95,7 +95,7 @@ UseSTARTTLS=YES
 rewriteDomain=$DOMAIN
 hostname=$HOSTNAME
 FromLineOverride=YES
-EOF
+EOF2
 
 
 if [ -n $ICINGA2_FEATURE_GRAPHITE ]; then
