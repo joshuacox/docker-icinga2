@@ -272,4 +272,5 @@ mover:
 hardclean: hardcleanMEAT rmall
 
 hardcleanMEAT:
-	rm DATADIR
+	-@rm -f /exports/icinga2
+	-@rm -f DATADIR
