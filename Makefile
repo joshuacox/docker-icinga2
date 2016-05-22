@@ -271,6 +271,8 @@ nodelist:
 	docker exec -i -t `cat cid` sh -c '/usr/sbin/icinga2 node list'
 
 mover:
-	mkdir -p /exports/icinga2
-	mv /tmp/datadir /exports/icinga2/
-	echo /exports/icinga2/datadir > DATADIR
+	-@mkdir -p /exports/icinga2
+	-@cd /exports; tar zcf /exports/icinga2-`date -I`.tar.gz icinga2
+	-@rm -Rf /exports/icinga/datadir
+	-@mv /tmp/datadir /exports/icinga2/
+	-@echo /exports/icinga2/datadir > DATADIR
