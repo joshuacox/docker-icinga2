@@ -22,7 +22,7 @@ run: rm build waitformysql rundocker
 # run a  container that requires mysql temporarily
 temp: MYSQL_PASS rm build mysqltemp waitformysql runmysqltemp
 
-next: grab rm rmmysql wait mover wait prod
+next: grab rm rmmysqltemp wait mover wait prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
 prod: DATADIR MYSQL_PASS rm build mysqlCID waitformysql runprod
@@ -207,16 +207,28 @@ mysqlCID-rmkill:
 	-@echo "removing mysqlCID"
 	-@rm -f mysqlCID
 
+rmmysqltemp: mysqltempCID-rmkill
+
+mysqltempCID-rmkill:
+	-@echo "killing mysql temp container"
+	-@docker kill `cat mysqltempCID`
+	-@echo "removing mysql temp container"
+	-@docker rm `cat mysqltempCID`
+	-@echo "removing mysqltempCID"
+	-@rm -f mysqltempCID
+
 # This one is ephemeral and will not persist data
-mysqltemp:
+mysqltemp: mysqltempCID
+
+mysqltempCID:
 	docker run \
-	--cidfile="mysqlCID" \
+	--cidfile="mysqltempCID" \
 	--name `cat NAME`-mysql \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	mysql:5.6
 
-rmall: rm  rmmysql
+rmall: rm  rmmysql rmmysqltemp
 
 grab: grabicingadir grabmysqldatadir mvdatadir
 
