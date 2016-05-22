@@ -22,7 +22,7 @@ run: rm build waitformysql rundocker
 # run a  container that requires mysql temporarily
 temp: MYSQL_PASS rm build mysqltemp waitformysql runmysqltemp
 
-next: grab wait rm rmmysql wait mover wait prod
+next: grab rm rmmysql wait mover wait prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
 prod: DATADIR MYSQL_PASS rm build mysqlCID waitformysql runprod
@@ -127,7 +127,7 @@ rm-image: SHELL:=/bin/bash
 rm-image:
 	-@ echo "removing Icinga2 container"
 	-@docker rm `cat cid`
-	-@rm -f cid &>/dev/null
+	-@rm -f cid
 
 rm: kill rm-image
 
@@ -201,9 +201,9 @@ rmmysql: mysqlCID-rmkill
 
 mysqlCID-rmkill: SHELL:=/bin/bash
 mysqlCID-rmkill:
-	-@ echo "killing Icinga2 container"
+	-@ echo "killing mysql container"
 	-@docker kill `cat mysqlCID`
-	-@ echo "removing Icinga2 container"
+	-@ echo "removing mysql container"
 	-@docker rm `cat mysqlCID`
 	-@rm -f mysqlCID &>/dev/null
 
