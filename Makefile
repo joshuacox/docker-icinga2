@@ -271,6 +271,9 @@ DATADIR:
 	done ;
 
 MYSQL_PASS:
+	@tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1 > MYSQL_PASS
+
+askMYSQL_PASS:
 	@while [ -z "$$MYSQL_PASS" ]; do \
 		read -r -p "Enter the MySQL password you wish to associate with this container [MYSQL_PASS]: " MYSQL_PASS; echo "$$MYSQL_PASS">MYSQL_PASS; cat MYSQL_PASS; \
 	done ;
