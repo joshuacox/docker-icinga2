@@ -120,11 +120,13 @@ builddocker:
 
 kill: SHELL:=/bin/bash
 kill:
-	-@docker kill `cat cid` &>/dev/null
+	-@ echo "killing Icinga2 container"
+	-@docker kill `cat cid`
 
 rm-image: SHELL:=/bin/bash
 rm-image:
-	-@docker rm `cat cid` &>/dev/null
+	-@ echo "removing Icinga2 container"
+	-@docker rm `cat cid`
 	-@rm -f cid &>/dev/null
 
 rm: kill rm-image
@@ -199,8 +201,10 @@ rmmysql: mysqlCID-rmkill
 
 mysqlCID-rmkill: SHELL:=/bin/bash
 mysqlCID-rmkill:
-	-@docker kill `cat mysqlCID` &>/dev/null
-	-@docker rm `cat mysqlCID` &>/dev/null
+	-@ echo "killing Icinga2 container"
+	-@docker kill `cat mysqlCID`
+	-@ echo "removing Icinga2 container"
+	-@docker rm `cat mysqlCID`
 	-@rm -f mysqlCID &>/dev/null
 
 # This one is ephemeral and will not persist data
