@@ -29,7 +29,7 @@ prod: DATADIR MYSQL_PASS rm build mysqlCID waitformysql runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
-temp:
+777654temp:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	chmod 777 $(TMP)
 	echo $TMP
