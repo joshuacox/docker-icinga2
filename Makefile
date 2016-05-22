@@ -275,5 +275,5 @@ mover:
 hardclean: hardcleanMEAT rmall
 
 hardcleanMEAT:
-	-@rm -f /exports/icinga2
-	-@rm -f DATADIR
+	-@rm -Rf /exports/icinga2 &>/dev/null
+	-@rm -f DATADIR &>/dev/null
