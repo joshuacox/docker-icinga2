@@ -116,7 +116,7 @@ debug:
 	-t $(TAG) /bin/bash
 
 builddocker:
-	/usr/bin/time -v docker build -t `cat TAG` .
+	@docker build -t `cat TAG` .
 
 kill: SHELL:=/bin/bash
 kill:
@@ -199,13 +199,12 @@ mysqlCID:
 
 rmmysql: mysqlCID-rmkill
 
-mysqlCID-rmkill: SHELL:=/bin/bash
 mysqlCID-rmkill:
-	-@ echo "killing mysql container"
+	-@echo "killing mysql container"
 	-@docker kill `cat mysqlCID`
-	-@ echo "removing mysql container"
+	-@echo "removing mysql container"
 	-@docker rm `cat mysqlCID`
-	-@ echo "removing mysqlCID"
+	-@echo "removing mysqlCID"
 	-@rm -f mysqlCID
 
 # This one is ephemeral and will not persist data
