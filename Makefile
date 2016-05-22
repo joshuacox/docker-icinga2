@@ -15,14 +15,14 @@ help:
 build: NAME TAG builddocker
 
 # run a plain container
-run: rm build rundocker
+run: rm build wait rundocker
 
 # run a  container that requires mysql temporarily
-temp: MYSQL_PASS rm build mysqltemp runmysqltemp
+temp: MYSQL_PASS rm build mysqltemp wait runmysqltemp
 
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
-prod: DATADIR MYSQL_PASS rm build mysqlcid runprod
+prod: DATADIR MYSQL_PASS rm build mysqlcid wait runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
@@ -92,6 +92,9 @@ runprod:
 	-t $(TAG)
 
 debug:
+	@echo 'pausing for mysql to settle'
+	-@bash wait.sh
+	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make temp" again'
 	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
@@ -190,9 +193,6 @@ mysqlcid:
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:5.6
-	@echo 'pausing for mysql to settle'
-	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make prod" again'
-	-@bash wait.sh
 
 rmmysql: mysqlcid-rmkill
 
@@ -209,9 +209,6 @@ mysqltemp:
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	mysql:5.6
-	@echo 'pausing for mysql to settle'
-	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make temp" again'
-	-@bash wait.sh
 
 rmmysqltemp: mysqltemp-rmkill
 
@@ -253,7 +250,8 @@ MYSQL_PASS:
 	done ;
 
 wait:
-	bash wait.sh
+	@echo 'pausing for mysql to settle'
+	-@bash wait.sh
 
 update: update-config rm prod
 
