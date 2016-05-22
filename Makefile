@@ -48,7 +48,6 @@ rundocker:
 runmysqltemp:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
-	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-d \
@@ -96,9 +95,9 @@ debug:
 	@echo -n ' use "make logs" at this point to see if it fails on mysql, if so wait for a bit and and then try "make temp" again'
 	$(eval DATADIR := $(shell cat DATADIR))
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	-@chmod 777 $(TMP)
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
-	-@chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-d \
