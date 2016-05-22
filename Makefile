@@ -120,9 +120,11 @@ debug:
 builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
 
+kill: SHELL:=/bin/bash
 kill:
 	-@docker kill `cat cid` &>/dev/null
 
+rm-image: SHELL:=/bin/bash
 rm-image:
 	-@docker rm `cat cid` &>/dev/null
 	-@rm -f cid &>/dev/null
@@ -197,6 +199,7 @@ mysqlCID:
 
 rmmysql: mysqlCID-rmkill
 
+mysqlCID-rmkill: SHELL:=/bin/bash
 mysqlCID-rmkill:
 	-@docker kill `cat mysqlCID` &>/dev/null
 	-@docker rm `cat mysqlCID` &>/dev/null
