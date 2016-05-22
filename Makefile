@@ -12,20 +12,20 @@ help:
 	@echo ""   4. make enter     - execute an interactive bash in docker container
 	@echo ""   3. make logs      - follow the logs of docker container
 
-auto: temp waitforport4080 next waitforport4080
+auto: temp waitforport4080 wait next waitforport4080
 
 build: NAME TAG builddocker
 
 # run a plain container
-run: rm build wait rundocker
+run: rm build waitformysql rundocker
 
 # run a  container that requires mysql temporarily
-temp: MYSQL_PASS rm build mysqltemp wait runmysqltemp
+temp: MYSQL_PASS rm build mysqltemp waitformysql runmysqltemp
 
-next: grab rm rmmysql mover prod
+next: grab wait rm rmmysql wait mover wait prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
-prod: DATADIR MYSQL_PASS rm build mysqlCID wait runprod
+prod: DATADIR MYSQL_PASS rm build mysqlCID waitformysql runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
@@ -245,9 +245,6 @@ MYSQL_PASS:
 		read -r -p "Enter the MySQL password you wish to associate with this container [MYSQL_PASS]: " MYSQL_PASS; echo "$$MYSQL_PASS">MYSQL_PASS; cat MYSQL_PASS; \
 	done ;
 
-wait:
-	-@bash wait.sh
-
 update: update-config rm prod
 
 update-config:
@@ -276,6 +273,12 @@ hardclean: hardcleanMEAT rmall
 hardcleanMEAT:
 	-@rm -Rf /exports/icinga2 &>/dev/null
 	-@rm -f DATADIR &>/dev/null
+
+wait:
+	sleep 5
+
+waitformysql:
+	-@bash wait.sh
 
 waitforport4080:
 	@echo -n "Waiting for port 4080 to become available"
