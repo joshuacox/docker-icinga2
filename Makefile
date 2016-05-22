@@ -29,14 +29,16 @@ prod: DATADIR MYSQL_PASS rm build mysqlCID wait runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
-rundocker:
+temp:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
+	chmod 777 $(TMP)
+	echo $TMP
+
+rundocker:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
-	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
-	-v $(TMP):/tmp \
 	-d \
 	-P \
 	-v /var/run/docker.sock:/run/docker.sock \
@@ -44,20 +46,16 @@ rundocker:
 	-t $(TAG)
 
 runmysqltemp:
-	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
-	-v $(TMP):/tmp \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
 	-p 4665:5665 \
 	--link `cat NAME`-mysql:mysql \
-	-v /var/run/docker.sock:/run/docker.sock \
-	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
 
 runprod:
@@ -85,13 +83,11 @@ runprod:
 	--env="DOMAIN=$(DOMAIN)" \
 	--env="HOSTNAME=$(HOSTNAME)" \
 	--link `cat NAME`-mysql:mysql \
-	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(DATADIR)/lib/icinga2:/var/lib/icinga2 \
 	-v $(DATADIR)/etc/icinga:/etc/icinga \
 	-v $(DATADIR)/etc/icinga2:/etc/icinga2 \
 	-v $(DATADIR)/etc/icinga2-classicui:/etc/icinga2-classicui \
 	-v $(DATADIR)/etc/icingaweb2:/etc/icingaweb2 \
-	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
 
 debug:
@@ -102,7 +98,7 @@ debug:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
-	chmod 777 $(TMP)
+	-@chmod 777 $(TMP)
 	@docker run --name=$(NAME) \
 	--cidfile="cid" \
 	-d \
@@ -116,6 +112,7 @@ debug:
 	-v $(DATADIR)/etc/icinga2:/etc/icinga2 \
 	-v $(DATADIR)/etc/icinga2-classicui:/etc/icinga2-classicui \
 	-v $(DATADIR)/etc/icingaweb2:/etc/icingaweb2 \
+	-v $(TMP):/tmp \
 	-v $(shell which docker):/bin/docker \
 	-t $(TAG) /bin/bash
 
