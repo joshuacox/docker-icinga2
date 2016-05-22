@@ -268,3 +268,8 @@ mover:
 	-@rm -Rf /exports/icinga/datadir
 	-@mv /tmp/datadir /exports/icinga2/
 	-@echo /exports/icinga2/datadir > DATADIR
+
+hardclean: hardcleanMEAT rmall
+
+hardcleanMEAT:
+	rm DATADIR
