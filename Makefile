@@ -268,7 +268,7 @@ nodelist:
 mover:
 	-@mkdir -p /exports/icinga2
 	-@cd /exports; tar zcf /exports/icinga2-`date -I`.tar.gz icinga2
-	-@rm -Rf /exports/icinga/datadir
+	-@rm -Rf /exports/icinga2/datadir
 	-@mv /tmp/datadir /exports/icinga2/
 	-@echo /exports/icinga2/datadir > DATADIR
 
