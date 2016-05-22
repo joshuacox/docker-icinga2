@@ -121,11 +121,11 @@ builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
 
 kill:
-	-@docker kill `cat cid`
+	-@docker kill `cat cid` &>/dev/null
 
 rm-image:
-	-@docker rm `cat cid`
-	-@rm cid
+	-@docker rm `cat cid` &>/dev/null
+	-@rm -f cid &>/dev/null
 
 rm: kill rm-image
 
@@ -198,9 +198,9 @@ mysqlCID:
 rmmysql: mysqlCID-rmkill
 
 mysqlCID-rmkill:
-	-@docker kill `cat mysqlCID`
-	-@docker rm `cat mysqlCID`
-	-@rm mysqlCID
+	-@docker kill `cat mysqlCID` &>/dev/null
+	-@docker rm `cat mysqlCID` &>/dev/null
+	-@rm -f mysqlCID &>/dev/null
 
 # This one is ephemeral and will not persist data
 mysqltemp:
