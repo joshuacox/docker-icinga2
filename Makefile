@@ -234,7 +234,7 @@ grab: grabicingadir grabmysqldatadir mvdatadir
 
 grabmysqldatadir:
 	-mkdir -p datadir
-	docker cp `cat mysqlCID`:/var/lib/mysql  - |sudo tar -C datadir/ -pxvf -
+	docker cp `cat mysqltempCID`:/var/lib/mysql  - |sudo tar -C datadir/ -pxvf -
 
 grabicingadir:
 	-mkdir -p datadir/lib
