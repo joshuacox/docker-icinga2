@@ -20,7 +20,7 @@ build: NAME TAG builddocker
 run: rm build waitformysql rundocker
 
 # run a  container that requires mysql temporarily
-temp: MYSQL_PASS rm build mysqltemp waitformysql runmysqltemp
+temp: MYSQL_PASS rm build mysqltemp waitformysqltemp runtemp
 
 next: grab rm rmmysqltemp wait mover wait prod
 # run a  container that requires mysql in production with persistent data
@@ -45,7 +45,7 @@ rundocker:
 	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
 
-runmysqltemp:
+runtemp:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	@docker run --name=$(NAME) \
