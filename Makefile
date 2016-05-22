@@ -208,7 +208,6 @@ mysqlCID:
 	docker run \
 	--cidfile="mysqlCID" \
 	--name `cat NAME`-mysql \
-	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:5.6
