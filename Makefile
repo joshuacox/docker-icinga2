@@ -124,11 +124,11 @@ builddocker:
 
 kill: SHELL:=/bin/bash
 kill:
-	-@docker kill `cat cid &>/dev/null` &>/dev/null
+	-@docker kill `cat cid` &>/dev/null
 
 rm-image: SHELL:=/bin/bash
 rm-image:
-	-@docker rm `cat cid &>/dev/null` &>/dev/null
+	-@docker rm `cat cid` &>/dev/null
 	-@rm -f cid &>/dev/null
 
 rm: kill rm-image
@@ -203,8 +203,8 @@ rmmysql: mysqlCID-rmkill
 
 mysqlCID-rmkill: SHELL:=/bin/bash
 mysqlCID-rmkill:
-	-@docker kill `cat mysqlCID &>/dev/null` &>/dev/null
-	-@docker rm `cat mysqlCID &>/dev/null` &>/dev/null
+	-@docker kill `cat mysqlCID` &>/dev/null
+	-@docker rm `cat mysqlCID` &>/dev/null
 	-@rm -f mysqlCID &>/dev/null
 
 # This one is ephemeral and will not persist data
