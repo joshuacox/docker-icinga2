@@ -25,7 +25,7 @@ temp: MYSQL_PASS rm build mysqltemp waitformysqltemp runtemp
 next: grab rm rmmysqltemp wait mover wait prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
-prod: DATADIR MYSQL_PASS rm build mysqlCID waitformysql runprod
+prod: DATADIR MYSQL_PASS mysqlCID waitformysql runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
@@ -293,14 +293,17 @@ wait:
 	-@sleep 5
 
 waitformysql:
+	-@sleep 3
 	-@bash wait.sh `cat mysqlCID`
-	-@ sleep 3
+	-@sleep 3
 
 waitformysqltemp:
+	-@sleep 3
 	-@bash wait.sh `cat mysqltempCID`
 	-@sleep 3
 
 waitforport4080:
+	-@sleep 3
 	@echo -n "Waiting for port 4080 to become available"
 	@while ! curl --output /dev/null --silent --head --fail http://localhost:4080; do sleep 2 && echo -n .; done;
 	@echo "  check port 4080, it appears that now it is up!"
