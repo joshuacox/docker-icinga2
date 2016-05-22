@@ -20,6 +20,7 @@ run: rm build wait rundocker
 # run a  container that requires mysql temporarily
 temp: MYSQL_PASS rm build mysqltemp wait runmysqltemp
 
+next: grab rm rmmysqltemp mover prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
 prod: DATADIR MYSQL_PASS rm build mysqlcid wait runprod
@@ -268,3 +269,8 @@ pki:
 
 nodelist:
 	docker exec -i -t `cat cid` sh -c '/usr/sbin/icinga2 node list'
+
+mover:
+	mkdir -p /exports/icinga2
+	mv /tmp/datadir /exports/icinga2/
+	echo /exports/icinga2/datadir > DATADIR
