@@ -7,3 +7,5 @@
 until docker exec icinga2-mysqltemp mysqladmin -hlocalhost -p`cat MYSQL_PASS` -uroot ping &>/dev/null; do
  echo -n "."; sleep 2
 done
+# extra
+sleep 1
