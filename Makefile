@@ -20,10 +20,10 @@ run: rm build wait rundocker
 # run a  container that requires mysql temporarily
 temp: MYSQL_PASS rm build mysqltemp wait runmysqltemp
 
-next: grab rm rmmysqltemp mover prod
+next: grab rm rmmysql mover prod
 # run a  container that requires mysql in production with persistent data
-# HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysqltemp
-prod: DATADIR MYSQL_PASS rm build mysqlcid wait runprod
+# HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
+prod: DATADIR MYSQL_PASS rm build mysqlCID wait runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
@@ -53,7 +53,7 @@ runmysqltemp:
 	-p 4080:80 \
 	-p 4443:443 \
 	-p 4665:5665 \
-	--link `cat NAME`-mysqltemp:mysql \
+	--link `cat NAME`-mysql:mysql \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v $(shell which docker):/bin/docker \
 	-t $(TAG)
@@ -185,46 +185,39 @@ SMTP_DOMAIN:
 # MYSQL additions
 # use these to generate a mysql container that may or may not be persistent
 
-mysqlcid:
+mysqlCID:
 	$(eval DATADIR := $(shell cat DATADIR))
 	docker run \
-	--cidfile="mysqlcid" \
+	--cidfile="mysqlCID" \
 	--name `cat NAME`-mysql \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
 	mysql:5.6
 
-rmmysql: mysqlcid-rmkill
+rmmysql: mysqlCID-rmkill
 
-mysqlcid-rmkill:
-	-@docker kill `cat mysqlcid`
-	-@docker rm `cat mysqlcid`
-	-@rm mysqlcid
+mysqlCID-rmkill:
+	-@docker kill `cat mysqlCID`
+	-@docker rm `cat mysqlCID`
+	-@rm mysqlCID
 
 # This one is ephemeral and will not persist data
 mysqltemp:
 	docker run \
-	--cidfile="mysqltemp" \
-	--name `cat NAME`-mysqltemp \
+	--cidfile="mysqlCID" \
+	--name `cat NAME`-mysql \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	mysql:5.6
 
-rmmysqltemp: mysqltemp-rmkill
-
-mysqltemp-rmkill:
-	-@docker kill `cat mysqltemp`
-	-@docker rm `cat mysqltemp`
-	-@rm mysqltemp
-
-rmall: rm rmmysqltemp rmmysql
+rmall: rm  rmmysql
 
 grab: grabicingadir grabmysqldatadir mvdatadir
 
 grabmysqldatadir:
 	-mkdir -p datadir
-	docker cp `cat mysqltemp`:/var/lib/mysql  - |sudo tar -C datadir/ -pxvf -
+	docker cp `cat mysqlCID`:/var/lib/mysql  - |sudo tar -C datadir/ -pxvf -
 
 grabicingadir:
 	-mkdir -p datadir/lib
