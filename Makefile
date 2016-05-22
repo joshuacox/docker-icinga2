@@ -12,6 +12,8 @@ help:
 	@echo ""   4. make enter     - execute an interactive bash in docker container
 	@echo ""   3. make logs      - follow the logs of docker container
 
+auto: temp waitforport4080 next waitforport4080
+
 build: NAME TAG builddocker
 
 # run a plain container
@@ -277,3 +279,8 @@ hardclean: hardcleanMEAT rmall
 hardcleanMEAT:
 	-@rm -Rf /exports/icinga2 &>/dev/null
 	-@rm -f DATADIR &>/dev/null
+
+waitforport4080:
+	@echo -n "Waiting for port 80 to become available"
+	@while ! curl --output /dev/null --silent --head --fail http://localhost:4080; do sleep 10 && echo -n .; done;
+	@echo "  check port 4080, it appears that now it is up!"
