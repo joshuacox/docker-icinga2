@@ -275,12 +275,14 @@ hardcleanMEAT:
 	-@rm -f DATADIR &>/dev/null
 
 wait:
-	sleep 5
+	-@ sleep 5
 
 waitformysql:
 	-@bash wait.sh
+	-@ sleep 3
 
 waitforport4080:
 	@echo -n "Waiting for port 4080 to become available"
 	@while ! curl --output /dev/null --silent --head --fail http://localhost:4080; do sleep 2 && echo -n .; done;
 	@echo "  check port 4080, it appears that now it is up!"
+	-@ sleep 3
