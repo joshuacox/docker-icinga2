@@ -16,17 +16,20 @@ should be easy first pull the temporary recipe up
 make temp
 ```
 
-Let it finish populating the databases, (you can watch by using `make logs` ctrl-c to exit viewing the logs, despite what the warning says you will actually not kill the container
-[because your are killing the `tail -f` of the log watching process not the process itself in this case])
-and `killall mysql`
-
-
+then
 ```
-make enter      # we have ‘entered’ the container
-killall mysql   # note this is ran inside of the container
-exit            # back in the host environment now
+make next
 ```
 
+this is a very opinionated method, in that this will put your data directory into `/exports/icinga2`
+if you wish to control where things go, you can do it manually. Which I describe in the next section
+
+### Manually go through the steps
+
+First create the temporary container so we can grab the persistent data directories
+```
+make temp
+```
 
 then grab all the persistent volumes
 
