@@ -282,5 +282,5 @@ hardcleanMEAT:
 
 waitforport4080:
 	@echo -n "Waiting for port 4080 to become available"
-	@while ! curl --output /dev/null --silent --head --fail http://localhost:4080; do sleep 10 && echo -n .; done;
+	@while ! curl --output /dev/null --silent --head --fail http://localhost:4080; do sleep 2 && echo -n .; done;
 	@echo "  check port 4080, it appears that now it is up!"
