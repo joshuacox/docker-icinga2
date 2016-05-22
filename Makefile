@@ -205,7 +205,8 @@ mysqlCID-rmkill:
 	-@docker kill `cat mysqlCID`
 	-@ echo "removing mysql container"
 	-@docker rm `cat mysqlCID`
-	-@rm -f mysqlCID &>/dev/null
+	-@ echo "removing mysqlCID"
+	-@rm -f mysqlCID
 
 # This one is ephemeral and will not persist data
 mysqltemp:
