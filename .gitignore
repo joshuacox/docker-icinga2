@@ -1,7 +1,9 @@
 cid
+tempCID
+icinga2CID
 mysql
-mysqlcid
-mysqltemp
+mysqlCID
+mysqltempCID
 jessie
 datadir
 DATADIR

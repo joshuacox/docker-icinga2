@@ -22,7 +22,7 @@ run: rm build waitformysql rundocker
 # run a  container that requires mysql temporarily
 temp: MYSQL_PASS rm build mysqltemp waitformysqltemp runtemp
 
-next: grab rm rmmysqltemp wait mover wait prod
+next: grab rmtemp rmmysqltemp wait mover wait prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
 prod: DATADIR MYSQL_PASS mysqlCID waitformysql runprod
@@ -49,7 +49,7 @@ runtemp:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	@docker run --name=$(NAME) \
-	--cidfile="cid" \
+	--cidfile="tempCID" \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
@@ -69,7 +69,7 @@ runprod:
 	$(eval DOMAIN := $(shell cat DOMAIN))
 	$(eval HOSTNAME := $(shell cat HOSTNAME))
 	@docker run --name=$(NAME) \
-	--cidfile="cid" \
+	--cidfile="icinga2CID" \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
@@ -99,7 +99,7 @@ debug:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
 	@docker run --name=$(NAME) \
-	--cidfile="cid" \
+	--cidfile="debugCID" \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
@@ -121,23 +121,39 @@ builddocker:
 kill: SHELL:=/bin/bash
 kill:
 	-@ echo "killing Icinga2 container"
-	-@docker kill `cat cid`
+	-@docker kill `cat icinga2CID`
 
 rm-image: SHELL:=/bin/bash
 rm-image:
 	-@ echo "removing Icinga2 container"
-	-@docker rm `cat cid`
-	-@rm -f cid
+	-@docker rm `cat icinga2CID`
+	-@rm -f icinga2CID
 
 rm: kill rm-image
+
+rmtemp: killtemp rmtemp-image
+
+killtemp: SHELL:=/bin/bash
+killtemp:
+	-@ echo "killing Icinga2 container"
+	-@docker kill `cat tempCID`
+
+rmtemp-image: SHELL:=/bin/bash
+rmtemp-image:
+	-@ echo "removing Icinga2 container"
+	-@docker rm `cat tempCID`
+	-@rm -f tempCID
 
 clean: rm
 
 enter:
-	docker exec -i -t `cat cid` /bin/bash
+	docker exec -i -t `cat icinga2CID` /bin/bash
+
+templogs:
+	docker logs -f `cat tempCID`
 
 logs:
-	docker logs -f `cat cid`
+	docker logs -f `cat icinga2CID`
 
 NAME:
 	@while [ -z "$$NAME" ]; do \
@@ -239,11 +255,11 @@ grabmysqldatadir:
 grabicingadir:
 	-mkdir -p datadir/lib
 	-mkdir -p datadir/etc
-	docker cp `cat cid`:/var/lib/icinga2 - |sudo tar -C datadir/lib/ -pxvf -
-	docker cp `cat cid`:/etc/icinga - |sudo tar -C datadir/etc/ -pxvf -
-	docker cp `cat cid`:/etc/icinga2 - |sudo tar -C datadir/etc/ -pxvf -
-	docker cp `cat cid`:/etc/icinga2-classicui - |sudo tar -C datadir/etc/ -pxvf -
-	docker cp `cat cid`:/etc/icingaweb2 - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat tempCID`:/var/lib/icinga2 - |sudo tar -C datadir/lib/ -pxvf -
+	docker cp `cat tempCID`:/etc/icinga - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat tempCID`:/etc/icinga2 - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat tempCID`:/etc/icinga2-classicui - |sudo tar -C datadir/etc/ -pxvf -
+	docker cp `cat tempCID`:/etc/icingaweb2 - |sudo tar -C datadir/etc/ -pxvf -
 
 mvdatadir:
 	sudo mv datadir /tmp
@@ -263,18 +279,18 @@ MYSQL_PASS:
 update: update-config rm prod
 
 update-config:
-	docker exec -i -t `cat cid` sh -c '/usr/sbin/icinga2 node update-config'
+	docker exec -i -t `cat icinga2CID` sh -c '/usr/sbin/icinga2 node update-config'
 
 pki:
 	-@rm -f NEW_PKI_CN
 	@while [ -z "$$NEW_PKI_CN" ]; do \
 		read -r -p "Enter the common name (CN) you wish to this icinga2 instance [NEW_PKI_CN]: " NEW_PKI_CN; echo "'$$NEW_PKI_CN'">NEW_PKI_CN; cat NEW_PKI_CN; \
 	done ;
-	docker exec -i -t `cat cid` sh -c "/usr/sbin/icinga2 pki ticket --cn `cat NEW_PKI_CN`"
+	docker exec -i -t `cat icinga2CID` sh -c "/usr/sbin/icinga2 pki ticket --cn `cat NEW_PKI_CN`"
 	-@rm -f NEW_PKI_CN
 
 nodelist:
-	docker exec -i -t `cat cid` sh -c '/usr/sbin/icinga2 node list'
+	docker exec -i -t `cat icinga2CID` sh -c '/usr/sbin/icinga2 node list'
 
 mover:
 	-@mkdir -p /exports/icinga2
