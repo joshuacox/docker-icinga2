@@ -251,7 +251,6 @@ MYSQL_PASS:
 	done ;
 
 wait:
-	@echo 'pausing for mysql to settle'
 	-@bash wait.sh
 
 update: update-config rm prod

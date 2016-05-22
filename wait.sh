@@ -4,6 +4,7 @@
 #while ! nc -z localhost 3306; do   
     #sleep 0.1 # wait for 1/10 of the second before check again
 #done
+echo -n waiting for mysql to come online...
 until docker exec icinga2-mysqltemp mysqladmin -hlocalhost -p`cat MYSQL_PASS` -uroot ping &>/dev/null; do
  echo -n "."; sleep 2
 done
