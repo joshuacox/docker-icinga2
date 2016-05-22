@@ -54,7 +54,7 @@ runtemp:
 	-p 4080:80 \
 	-p 4443:443 \
 	-p 4665:5665 \
-	--link `cat NAME`-mysql:mysql \
+	--link `cat NAME`-mysqltemp:mysql \
 	-t $(TAG)
 
 runprod:
@@ -223,7 +223,7 @@ mysqltemp: mysqltempCID
 mysqltempCID:
 	docker run \
 	--cidfile="mysqltempCID" \
-	--name `cat NAME`-mysql \
+	--name `cat NAME`-mysqltemp \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
 	mysql:5.6
