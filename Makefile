@@ -20,12 +20,12 @@ build: NAME TAG builddocker
 run: rm build waitformysql rundocker
 
 # run a  container that requires mysql temporarily
-temp: MYSQL_PASS rm build mysqltemp waitformysqltemp runtemp
+temp: HOSTNAME DOMAIN MYSQL_PASS rm build mysqltemp waitformysqltemp runtemp
 
 next: grab rmtemp rmmysqltemp wait mover wait prod
 # run a  container that requires mysql in production with persistent data
 # HINT: use the grabmysqldatadir recipe to grab the data directory automatically from the above runmysql
-prod: DATADIR MYSQL_PASS mysqlCID waitformysql runprod
+prod: HOSTNAME DOMAIN DATADIR MYSQL_PASS mysqlCID waitformysql runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
