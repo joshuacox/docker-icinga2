@@ -87,6 +87,7 @@ runprod:
 	-v $(DATADIR)/etc/icinga2:/etc/icinga2 \
 	-v $(DATADIR)/etc/icinga2-classicui:/etc/icinga2-classicui \
 	-v $(DATADIR)/etc/icingaweb2:/etc/icingaweb2 \
+	-h $(HOSTNAME).$(DOMAIN) \
 	-t $(TAG)
 
 debug:
