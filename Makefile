@@ -29,7 +29,7 @@ prod: HOSTNAME DOMAIN DATADIR MYSQL_PASS mysqlCID waitformysql runprod
 
 mailvars: SMTP_ENABLED SMTP_USER SMTP_PASS SMTP_DOMAIN SMTP_PORT DOMAIN HOSTNAME
 
-777654temp:
+offtemp:
 	$(eval TMP := $(shell mktemp -d --suffix=DOCKERTMP))
 	chmod 777 $(TMP)
 	echo $TMP
@@ -48,12 +48,14 @@ rundocker:
 runtemp:
 	$(eval NAME := $(shell cat NAME))
 	$(eval TAG := $(shell cat TAG))
+	$(eval DOMAIN := $(shell cat DOMAIN))
+	$(eval HOSTNAME := $(shell cat HOSTNAME))
 	@docker run --name=$(NAME) \
 	--cidfile="tempCID" \
 	-d \
 	-p 4080:80 \
 	-p 4443:443 \
-	-p 4665:5665 \
+	-p 5665:5665 \
 	--link `cat NAME`-mysqltemp:mysql \
 	-t $(TAG)
 
