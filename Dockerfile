@@ -30,7 +30,7 @@ apt-get -qq update ; \
 echo "icinga-common icinga/check_external_commands boolean true" | debconf-set-selections ; \
 apt-get -qqy install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 \
 unzip fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins \
-mailutils ssmtp icli nagios-plugins-contrib monitoring-plugins ; \
+mailutils ssmtp icli nagios-plugins-contrib monitoring-plugins openssh-server ; \
 dpkg-statoverride --update --add nagios www-data 2710 /var/run/icinga2/cmd/icinga2.cmd ; \
 apt-get clean ; \
 rm -Rf /var/lib/apt/lists/*

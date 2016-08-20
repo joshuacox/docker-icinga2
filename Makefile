@@ -246,7 +246,7 @@ mysqltempCID:
 	-d \
 	mysql:5.7
 
-rmall: rm  rmmysql rmmysqltemp
+rmall: rm rmtemp  rmmysql rmmysqltemp
 
 grab: grabicingadir grabmysqldatadir mvdatadir
 
