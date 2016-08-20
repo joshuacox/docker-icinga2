@@ -147,7 +147,7 @@ rmtemp-image:
 	-@docker rm `cat tempCID`
 	-@rm -f tempCID
 
-clean: rm
+clean: rmall
 
 enter:
 	docker exec -i -t `cat icinga2CID` /bin/bash
