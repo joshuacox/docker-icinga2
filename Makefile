@@ -213,7 +213,7 @@ mysqlCID:
 	--name `cat NAME`-mysql \
 	-d \
 	-v $(DATADIR)/mysql:/var/lib/mysql \
-	mysql:5.6
+	mysql:5.7
 
 rmmysql: mysqlCID-rmkill
 
@@ -244,7 +244,7 @@ mysqltempCID:
 	--name `cat NAME`-mysqltemp \
 	-e MYSQL_ROOT_PASSWORD=`cat MYSQL_PASS` \
 	-d \
-	mysql:5.6
+	mysql:5.7
 
 rmall: rm  rmmysql rmmysqltemp
 
