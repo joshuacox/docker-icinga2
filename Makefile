@@ -322,6 +322,12 @@ waitformysqltemp:
 	-@sleep 3
 	-@bash wait.sh `cat mysqltempCID`
 	-@sleep 3
+	-@echo 'discombobulating combubulator'
+	-@sleep 3
+	-@echo 'combobulating discombubulator'
+	-@sleep 3
+	-@echo 'seek quell state'
+	-@sleep 3
 
 waitforport4080:
 	-@sleep 3
