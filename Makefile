@@ -336,4 +336,4 @@ waitforport4080:
 	@echo "  check port 4080, it appears that now it is up!"
 	-@sleep 3
 
-restart: kill runprod
+restart: rm runprod
