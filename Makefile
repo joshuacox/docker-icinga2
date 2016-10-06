@@ -335,3 +335,5 @@ waitforport4080:
 	@while ! curl --output /dev/null --silent --head --fail http://localhost:4080; do sleep 2 && echo -n .; done;
 	@echo "  check port 4080, it appears that now it is up!"
 	-@sleep 3
+
+restart: kill runprod
