@@ -3,11 +3,10 @@ FROM debian:jessie
 MAINTAINER josh at webhosting coop
 
 # Environment variables
-ENV DOCKER_ICINGA2_UPDATED 20160104
-ENV DEBIAN_FRONTEND noninteractive
-# for systemd
-ENV container docker
-ENV ICINGA2_FEATURE_GRAPHITE true
+ENV DEBIAN_FRONTEND=noninteractive \
+  container=docker \
+  ICINGA2_FEATURE_GRAPHITE=true \
+  DOCKER_ICINGA2_UPDATED=20160104
 
 # Update package lists.
 # Install basic packages.
