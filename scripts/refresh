@@ -1,8 +1,7 @@
 #!/bin/bash
 DATE=$(date +%Y%m%d)
 FORTUNE=$(fortune -s|sed 's/"//g')
-  DOCKER_ICINGA2_UPDATED=20160104
 
 git pull
-sed -i "s/^\ \ DOCKER_ICINGA2_UPDATED=.*$/ENV DOCKER_ICINGA2_UPDATED=$DATE/" Dockerfile
+sed -i "s/^\ \ DOCKER_ICINGA2_UPDATED=.*$/  DOCKER_ICINGA2_UPDATED=$DATE/" Dockerfile
 git commit -am "$FORTUNE -- $DATE"
