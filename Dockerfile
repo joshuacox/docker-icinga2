@@ -6,7 +6,7 @@ MAINTAINER josh at webhosting coop
 ENV DEBIAN_FRONTEND=noninteractive \
   container=docker \
   ICINGA2_FEATURE_GRAPHITE=true \
-  DOCKER_ICINGA2_UPDATED=20171201
+  DOCKER_ICINGA2_UPDATED=20180101
 
 # Update package lists.
 # Install basic packages.
