@@ -1,5 +1,5 @@
 # Dockerfile for icinga2, icinga-web and icinga2-classicui
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER josh at webhosting coop
 
 # Environment variables
@@ -17,21 +17,27 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # of icinga-web fails. To work around this, install dependencies beforehand.
 # Clean up some.
 
-# echo "deb http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
-# echo "deb-src http://packages.icinga.org/debian icinga-jessie main" >> /etc/apt/sources.list ; \
+# echo "deb http://packages.icinga.org/debian icinga-stretch main" >> /etc/apt/sources.list ; \
+# echo "deb-src http://packages.icinga.org/debian icinga-stretch main" >> /etc/apt/sources.list ; \
 
-RUN apt-get -qq update; \
-apt-get -qqy install --no-install-recommends sudo procps ca-certificates wget pwgen supervisor; \
-wget -O - http://debmon.org/debmon/repo.key 2>/dev/null | apt-key add - ; \
-echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list ; \
-echo "deb http://debmon.org/debmon debmon-jessie main" >> /etc/apt/sources.list ; \
-apt-get -qq update ; \
-echo "icinga-common icinga/check_external_commands boolean true" | debconf-set-selections ; \
-apt-get -qqy install apache2 mysql-client php5 php5-mysql libapache2-mod-php5 \
-unzip fail2ban icinga2 icinga2-ido-mysql icingaweb2 icinga2-classicui nagios-plugins \
-mailutils ssmtp icli nagios-plugins-contrib monitoring-plugins openssh-server ; \
-dpkg-statoverride --update --add nagios www-data 2710 /var/run/icinga2/cmd/icinga2.cmd ; \
-apt-get clean ; \
+RUN apt-get -qq update && \
+apt-get -qqy install --no-install-recommends gnupg2 sudo procps ca-certificates wget pwgen supervisor && \
+wget -O - http://debmon.org/debmon/repo.key 2>/dev/null | apt-key add -  && \
+echo "deb http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list  && \
+echo "deb http://debmon.org/debmon debmon-stretch main" >> /etc/apt/sources.list  && \
+apt-get -qq update  && \
+echo "icinga-common icinga/check_external_commands boolean true" | debconf-set-selections
+RUN  apt-cache search icinga2
+RUN  apt-get install -y -f icinga2
+RUN \
+apt-get -yqq install \
+unzip fail2ban nagios-plugins \
+icinga2-bin icinga2-ido-mysql \
+icingaweb2 icinga2-classicui \
+icinga2 \
+mailutils ssmtp icli nagios-plugins-contrib monitoring-plugins openssh-server  && \
+dpkg-statoverride --update --add nagios www-data 2710 /var/run/icinga2/cmd/icinga2.cmd  && \
+apt-get clean  && \
 rm -Rf /var/lib/apt/lists/*
 
 # Add supervisord configuration
@@ -101,8 +107,8 @@ RUN chmod u+x /opt/icinga2/initdocker
 
 # configure PHP timezone
 # RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php.ini
-RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/apache2/php.ini
-RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php5/cli/php.ini
+#RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php7/apache2/php.ini
+#RUN sed -i 's/;date.timezone =/date.timezone = UTC/g' /etc/php7/cli/php.ini
 
 # redirect
 COPY www/index.html /var/www/html/index.html
