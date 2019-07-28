@@ -22,9 +22,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get -qq update && \
 apt-get -qqy install --no-install-recommends gnupg2 sudo procps ca-certificates wget pwgen supervisor && \
-wget -O - http://debmon.org/debmon/repo.key 2>/dev/null | apt-key add -  && \
-echo "deb http://http.debian.net/debian stretch-backports main" >> /etc/apt/sources.list  && \
-echo "deb http://debmon.org/debmon debmon-stretch main" >> /etc/apt/sources.list  && \
+wget -O - https://packages.icinga.com/icinga.key | apt-key add - && \
+echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list  && \
 apt-get -qq update  && \
 echo "icinga-common icinga/check_external_commands boolean true" | debconf-set-selections
 RUN  apt-cache search icinga2
