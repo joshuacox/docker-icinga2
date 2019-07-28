@@ -58,11 +58,10 @@ RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/ss
  rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
  ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key && \
  ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key && \
- echo 'root:icingar0xx' | chpasswd; \
- useradd -g wheel appuser; \
- mkdir /home/appuser; \
- chown -R appuser. /home/appuser; \
- echo 'appuser:appuser' | chpasswd; \
+ groupadd wheel && \
+ useradd -g wheel appuser && \
+ mkdir /home/appuser && \
+ chown -R appuser. /home/appuser && \
  sed -i -e 's/^\(%wheel\s\+.\+\)/#\1/gi' /etc/sudoers; \
  echo -e '\n%wheel ALL=(ALL) ALL' >> /etc/sudoers; \
  echo -e '\nDefaults:root   !requiretty' >> /etc/sudoers; \
@@ -72,6 +71,8 @@ RUN sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/ss
  echo 'syntax on' >> /home/appuser/.vimrc; \
  echo 'alias vi="vim"' >> /home/appuser/.bash_profile;
 
+#echo 'appuser:appuser' | chpasswd && \
+# echo 'root:icingar0xx' | chpasswd && \
 # fixes at build time (we can't do that at user's runtime)
 # setuid problem https://github.com/docker/docker/issues/6828
 # 4755 ping is required for icinga user calling check_ping

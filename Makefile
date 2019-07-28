@@ -174,8 +174,9 @@ DOMAIN:
 	done ;
 
 HOSTNAME:
-	@while [ -z "$$HOSTNAME" ]; do \
-		read -r -p "Enter the HOSTNAME you wish to associate with this container [HOSTNAME]: " HOSTNAME; echo "$$HOSTNAME">HOSTNAME; cat HOSTNAME; \
+	echo fuck you
+	@while [ -z "$$THIS_HOSTNAME" ]; do \
+		read -r -p "Enter the HOSTNAME you wish to associate with this container [HOSTNAME]: " THIS_HOSTNAME; echo "$$THIS_HOSTNAME">HOSTNAME; cat HOSTNAME; \
 	done ;
 
 SMTP_USER:
